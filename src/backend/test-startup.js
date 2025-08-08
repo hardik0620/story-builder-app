@@ -24,6 +24,7 @@ try {
     const aiRoutes = require('./routes/aiRoutes');
     const storyRoutes = require('./routes/storyRoutes');
     const userRoutes = require('./routes/userRoutes');
+    const generateTitleRoutes = require('./routes/generateTitleRoutes');
     console.log('✅ All routes loaded');
 
     console.log('6. Creating test Express app...');
@@ -36,6 +37,7 @@ try {
     app.use('/api/ai', aiRoutes);
     app.use('/api/stories', storyRoutes);
     app.use('/api/users', userRoutes);
+    app.use('/api/generate-title', generateTitleRoutes);
     app.use(errorHandler);
 
     console.log('✅ Express app configured successfully');

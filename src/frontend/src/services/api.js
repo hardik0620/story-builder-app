@@ -99,25 +99,6 @@ class ApiService {
         return hints[sceneId] || "An important part of the story where the hero grows or learns";
     }
 
-    // Generate story titles with enhanced context
-    async generateTitles(theme, selectedElements = []) {
-        const enhancedRequest = {
-            theme,
-            selectedElements: selectedElements.map(el => ({
-                name: el.name,
-                shortName: el.shortName,
-                emoji: el.emoji
-            })),
-            elementsCount: selectedElements.length,
-            timestamp: new Date().toISOString()
-        };
-
-        return this.makeRequest('/ai/generate-title', {
-            method: 'POST',
-            body: JSON.stringify(enhancedRequest),
-        });
-    }
-
     // Complete story with better context
     async completeStory(storyParts, targetLength = 500) {
         const enhancedRequest = {
@@ -172,6 +153,18 @@ class ApiService {
     // Get story themes
     async getStoryThemes() {
         return this.makeRequest('/stories/themes');
+    }
+
+    async generateTitles(theme) {
+        if (!theme) {
+            throw new Error('Theme is required for title generation');
+        }
+        console.log('🔍 Generating title for theme:', theme);
+        console.log('this', this)
+        return this.makeRequest('/generate-title', {
+            method: 'POST',
+            body: JSON.stringify({ theme }),
+        });
     }
 
     // Save story with enhanced metadata

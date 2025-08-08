@@ -135,6 +135,9 @@ try {
     const userRoutes = require('./routes/userRoutes');
     app.use('/api/users', userRoutes);
     console.log('✅ User routes loaded');
+    console.log('📁 Loading generate title routes...');
+    const generateTitleRoutes = require('./routes/generateTitleRoutes');
+    app.use('/api/generate-title', generateTitleRoutes)
 
     console.log('✅ All API routes configured successfully');
 } catch (error) {

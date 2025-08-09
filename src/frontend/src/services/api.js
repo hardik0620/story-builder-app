@@ -6,6 +6,19 @@ class ApiService {
         this.requestId = 0;
     }
 
+    // Helper function to provide context hints for scenes
+    getSceneContextHint(sceneId) {
+        const hints = {
+            0: "This is where we meet the hero and learn about their normal life before the adventure",
+            8: "Something bad happens or a problem appears that the hero needs to solve",
+            11: "The hero leaves their safe place and starts their journey or quest",
+            14: "The hero gets help - maybe a magical item, wise advice, or a helpful friend",
+            18: "The hero wins! They defeat the bad guy or solve the problem",
+            31: "The happy ending where the hero gets rewarded for being brave and good"
+        };
+        return hints[sceneId] || "An important part of the story where the hero grows or learns";
+    }
+
     // Helper method for making requests with better error handling
     async makeRequest(endpoint, options = {}) {
         const url = `${API_BASE_URL}${endpoint}`;
@@ -66,26 +79,6 @@ class ApiService {
         });
     }
 
-    // FIXED: Generate single story suggestion per request
-    async generateSuggestions(currentScene, storyContext = '', storyTheme = '') {
-        // Enhanced context for better suggestions
-        const enhancedContext = {
-            currentScene: {
-                ...currentScene,
-                contextHint: this.getSceneContextHint(currentScene.id)
-            },
-            storyContext: storyContext.slice(-300), // Last 300 characters for context
-            storyTheme,
-            requestType: 'single_suggestion', // Indicate we want only one
-            timestamp: new Date().toISOString()
-        };
-
-        return this.makeRequest('/ai/suggestions', {
-            method: 'POST',
-            body: JSON.stringify(enhancedContext),
-        });
-    }
-
     // Helper function to provide context hints for scenes
     getSceneContextHint(sceneId) {
         const hints = {
@@ -97,6 +90,28 @@ class ApiService {
             31: "The happy ending where the hero gets rewarded for being brave and good"
         };
         return hints[sceneId] || "An important part of the story where the hero grows or learns";
+    }
+
+    // Generate suggestion with complete story context
+    async generateSuggestions(currentScene, currentSceneContent = '', storyTheme = '', userInput = '', previousScenes = '') {
+        // Enhanced context with full story history
+        const enhancedContext = {
+            currentScene: {
+                ...currentScene,
+                contextHint: this.getSceneContextHint(currentScene.id)
+            },
+            previousScenes,         // Complete content of all previous scenes
+            currentSceneContent,    // Current scene's content
+            storyTheme,
+            storySoFar: userInput,
+            requestType: 'single_suggestion',
+            timestamp: new Date().toISOString()
+        };
+
+        return this.makeRequest('/ai/suggestions', {
+            method: 'POST',
+            body: JSON.stringify(enhancedContext)
+        });
     }
 
     // Complete story with better context
@@ -344,4 +359,4 @@ export const {
     checkConnectionQuality,
     clearCache,
     getDiagnostics
-} = apiService;
+} = apiService

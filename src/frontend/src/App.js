@@ -462,7 +462,7 @@ function App() {
       ) : (
         <>
           {/* Debug Info Panel */}
-          {process.env.NODE_ENV === 'development' && (
+          {/* {process.env.NODE_ENV === 'development' && (
             <div style={{
               position: 'fixed',
               top: '10px',
@@ -482,7 +482,7 @@ function App() {
               <div>Backend: {backendConnected ? '✅' : '❌'}</div>
               <div>Elements: {storyData.selectedElements?.length || 0}</div>
             </div>
-          )}
+          )} */}
 
           {/* API Test Component */}
           {showApiTest && process.env.NODE_ENV === 'development' && (

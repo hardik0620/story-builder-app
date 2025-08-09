@@ -157,7 +157,7 @@ const Step1Theme = ({ nextStep, previousStep, storyData, setStoryData }) => {
             </button>
 
             {/* Debug info panel for development */}
-            {process.env.NODE_ENV === 'development' && (
+            {/* {process.env.NODE_ENV === 'development' && (
                 <div style={{
                     background: 'rgba(255,255,0,0.1)',
                     border: '2px solid orange',
@@ -172,7 +172,7 @@ const Step1Theme = ({ nextStep, previousStep, storyData, setStoryData }) => {
                     Next Disabled: {isNextDisabled.toString()}<br />
                     Functions Available: nextStep={typeof nextStep}, setStoryData={typeof setStoryData}
                 </div>
-            )}
+            )} */}
 
             <div className="navigation">
                 <button className="nav-btn" onClick={handlePreviousStep}>← Back</button>

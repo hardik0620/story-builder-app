@@ -1,6 +1,7 @@
 // backend/controllers/aiController.js - Enhanced with Knowledge Database
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { PROPP_KNOWLEDGE_DATABASE, PROPP_HELPER_FUNCTIONS } = require('../data/proppKnowledgeDatabase');
+const fetch = require('node-fetch');
 
 // Initialize Gemini client
 let genAI = null;
@@ -121,11 +122,11 @@ exports.handleChat = async (req, res) => {
 // FIXED: Generate single contextual suggestion
 exports.generateSuggestions = async (req, res) => {
     try {
-        const { currentScene, storyContext, storyTheme } = req.body;
-
+        const { currentScene, currentSceneContent, storyTheme, storySoFar, previousScenes } = req.body;
         console.log('💡 Generating suggestion for scene:', currentScene?.name, 'theme:', storyTheme);
+        console.log('Story so far:', storySoFar);
 
-        if (!currentScene || !currentScene.id) {
+        if (!currentScene) {
             return res.json({
                 success: true,
                 suggestions: ["Continue your story by showing what your hero does next!"],
@@ -133,53 +134,62 @@ exports.generateSuggestions = async (req, res) => {
             });
         }
 
-        const sceneData = PROPP_KNOWLEDGE_DATABASE[currentScene.id];
-        let suggestion;
+        const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const prompt = `You are helping a young writer create a ${storyTheme || 'adventure'} story. They are working on the "${currentScene.name}" part of their story.
 
-        if (geminiModel && storyContext) {
-            try {
-                // Create focused prompt for single suggestion
-                const suggestionPrompt = `You are helping a young writer create a ${storyTheme || 'adventure'} story. They are working on the "${currentScene.name}" part of their story.
+Previous scenes:
+${previousScenes || 'This is the first scene.'}
 
-Context: ${storyContext}
-Scene: ${currentScene.name} - ${currentScene.description}
+Scene being written: ${currentScene.name} - ${currentScene.description}
 
-Based on this scene and context, give ONE specific, encouraging writing suggestion (1-2 sentences) that:
+Current scene written so far:
+${currentSceneContent || 'Nothing'}
+
+Current scene being written now:
+${storySoFar || 'Nothing'}
+
+Based on all the previous scenes, the current scene, and where we are in the story, give ONE specific, encouraging writing suggestion (1-2 sentences) that:
 1. Fits the "${currentScene.name}" function perfectly
-2. Continues naturally from the context
+2. Continues naturally from all previous scenes
 3. Is age-appropriate and inspiring
-4. Gives a specific action or idea
+4. Gives a specific action or idea that builds on what came before
 
-Respond with exactly one suggestion:`;
-
-                const response = await geminiModel.generateContent(suggestionPrompt);
-                const aiText = await response.response.text();
-                suggestion = aiText.trim();
-
-            } catch (aiError) {
-                console.log('🔄 AI suggestion failed, using knowledge base');
-                suggestion = getKnowledgeBaseSuggestion(sceneData, storyTheme);
-            }
-        } else {
-            // Use knowledge base suggestion
+Respond with exactly one suggestion, or, if you think that the contents of the scene so far is good enough for the young writer, ask them to proceed to the next scene, or simply complement their work`;
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }]
+        };
+        let suggestion;
+        try {
+            console.log('🔍 Sending suggestion request to Gemini');
+            console.log('payload:', JSON.stringify(payload));
+            const geminiRes = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            console.log('Gemini response status:', geminiRes.status);
+            const geminiData = await geminiRes.json();
+            console.log('Gemini response:', geminiData);
+            suggestion = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+        } catch (aiError) {
+            console.log('🔄 AI suggestion failed, using knowledge base');
+            const sceneData = PROPP_KNOWLEDGE_DATABASE[currentScene.id];
             suggestion = getKnowledgeBaseSuggestion(sceneData, storyTheme);
         }
 
         res.json({
             success: true,
-            suggestions: [suggestion], // Always single suggestion
+            suggestions: [suggestion],
             sceneId: currentScene.id,
             sceneName: currentScene.name,
             timestamp: new Date().toISOString(),
-            source: geminiModel ? 'ai_enhanced' : 'knowledge_base'
+            source: suggestion ? 'ai_enhanced' : 'knowledge_base'
         });
 
     } catch (error) {
         console.error('Suggestion Generation Error:', error);
-
-        // Fallback single suggestion
         const fallbackSuggestion = "Show what your hero discovers or decides to do next in this part of the adventure!";
-
         res.json({
             success: true,
             suggestions: [fallbackSuggestion],
@@ -610,6 +620,7 @@ if (!genAI) {
 // This file is now ready to be used in the backend with enhanced AI capabilities and a comprehensive knowledge database.
 module.exports = {
     handleChat: exports.handleChat,
+    generateSuggestions: exports.generateSuggestions,
     generateTitle: exports.generateTitle,
     completeStory: exports.completeStory,
     evaluateStory: exports.evaluateStory,

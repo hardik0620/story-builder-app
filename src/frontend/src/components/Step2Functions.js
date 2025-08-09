@@ -252,11 +252,11 @@ const Step2Functions = ({ nextStep, previousStep, storyData, setStoryData, backe
                     <div className="progress-fill" style={{ width: '33%' }}></div>
                 </div>
                 <p style={{ color: '#6c5ce7', fontWeight: 'bold' }}>✨ Step 2 of 6 - Choose Your Story Building Blocks✨</p>
-                {backendConnected && (
+                {/* {backendConnected && (
                     <div style={{ fontSize: '12px', color: '#28a745', marginTop: '5px' }}>
                         ✅ Connected to backend - {proppFunctions.length} functions available!
                     </div>
-                )}
+                )} */}
             </div>
 
             <div style={{

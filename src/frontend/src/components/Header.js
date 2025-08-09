@@ -235,7 +235,7 @@ const Header = ({
                     color: backendConnected ? '#00b894' : '#ff6b6b',
                     fontWeight: 'bold'
                 }}>
-                    {backendConnected ? '🟢 API' : '🔴 API'}
+                    {/* {backendConnected ? '🟢 API' : '🔴 API'} */}
                 </div>
             )}
 

@@ -15,6 +15,7 @@ const InlineTextSuggestions = ({
 }) => {
     const [suggestion, setSuggestion] = useState('');
     const [showSuggestion, setShowSuggestion] = useState(false);
+    const [storySoFar, setStorySoFar] = useState(value || '');
     const textareaRef = useRef(null);
     const suggestionTimeoutRef = useRef(null);
     const lastRequestRef = useRef(null);
@@ -62,6 +63,7 @@ const InlineTextSuggestions = ({
                 currentText: textBeforeCursor,
                 lastPhrase: currentSentence,
                 storyContext: storyContext || '',
+                storySoFar: storySoFar,
                 storyTheme: storyTheme || 'adventure',
                 currentScene: currentScene?.name || ''
             });
@@ -97,6 +99,8 @@ const InlineTextSuggestions = ({
     const handleTextChange = (e) => {
         const newValue = e.target.value;
         const cursorPosition = e.target.selectionStart;
+
+        setStorySoFar(newValue); // Update the full story context
 
         onChange(e);
 

@@ -101,12 +101,24 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
         try {
             if (backendConnected) {
                 // Use Gemini for suggestions via backend
+                // Get all previous scenes' content
+                const previousScenesParts = (storyData.storyParts || [])
+                    .filter(part => part.sceneIndex < currentSceneIndex)
+                    .map(part => part.text)
+                    .join('\n');
+
+                // Get current scene parts
                 const currentSceneParts = (storyData.storyParts || [])
                     .filter(part => part.sceneIndex === currentSceneIndex);
 
-                const storyContext = currentSceneParts.length > 0
-                    ? currentSceneParts.map(part => part.text).join(' ').slice(-200)
+                const currentSceneText = currentSceneParts.length > 0
+                    ? currentSceneParts.map(part => part.text).join(' ')
                     : `Starting the ${currentScene.name} part of the story`;
+
+                // Combine previous scenes with current scene for full context
+                const storyContext = previousScenesParts
+                    ? `${previousScenesParts}\n\nCurrent scene: ${currentSceneText}`
+                    : currentSceneText;
 
                 console.log('🤖 Requesting Gemini suggestion for scene:', currentScene.name);
 
@@ -118,8 +130,10 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                         description: currentScene.description,
                         model: 'gemini' // Explicitly request Gemini
                     },
-                    storyContext,
-                    storyData.theme
+                    currentSceneText,
+                    storyData.theme,
+                    userInput,
+                    previousScenesParts // Pass the full previous scenes content
                 );
 
                 if (response.success && response.suggestions && response.suggestions.length > 0) {
@@ -128,7 +142,7 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                         text: response.suggestions[0],
                         sceneId: currentScene.id
                     };
-                    setSuggestions(prev => [...prev, newSuggestion]);
+                    setSuggestions(prev => [newSuggestion, ...prev]);
                     console.log('✅ Got Gemini suggestion:', newSuggestion);
                 }
             } else {
@@ -613,14 +627,14 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                         >
                             ➡️
                         </button>
-                        <button
+                        {/* <button
                             className="toolbar-btn"
                             onClick={() => setTextAlign('justify')}
                             style={{ background: textFormatting.textAlign === 'justify' ? '#ffeaa7' : 'white' }}
                             title="Justify"
                         >
                             ⬌
-                        </button>
+                        </button> */}
 
                         {/* Text Color */}
                         <input
@@ -750,9 +764,9 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                                         </span>
                                     )}
                                 </p>
-                                <div style={{ fontSize: '0.8em', color: '#666', fontWeight: 'normal' }}>
+                                {/* <div style={{ fontSize: '0.8em', color: '#666', fontWeight: 'normal' }}>
                                     Format: {textFormatting.fontWeight === 'bold' ? '𝐁' : ''}{textFormatting.fontStyle === 'italic' ? '𝐼' : ''}{textFormatting.textDecoration === 'underline' ? '𝐔' : ''} {currentFontSize}px {textFormatting.textAlign}
-                                </div>
+                                </div> */}
                             </div>
 
                             <textarea
@@ -820,7 +834,7 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                                 <div key={suggestion.id} className="suggestion-item">
                                     <div className="suggestion-text">"{suggestion.text}"</div>
                                     <div className="suggestion-controls">
-                                        <button
+                                        {/* <button
                                             className="suggestion-btn"
                                             onClick={() => acceptSuggestion(suggestion)}
                                         >
@@ -831,7 +845,7 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                                             onClick={() => editSuggestion(suggestion)}
                                         >
                                             ✏️ Edit
-                                        </button>
+                                        </button> */}
                                         <button
                                             className="suggestion-btn"
                                             onClick={() => rejectSuggestion(suggestion)}

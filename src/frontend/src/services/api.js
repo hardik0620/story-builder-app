@@ -1,5 +1,5 @@
 // src/services/api.js - Enhanced for Better AI Integration
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5002/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL + "/api" || 'http://localhost:5002/api';
 
 class ApiService {
     constructor() {
@@ -54,7 +54,9 @@ class ApiService {
 
     // Health check
     async checkHealth() {
-        return this.makeRequest('/health');
+        return this.makeRequest('/healthCheck', {
+            method: 'POST'
+        });
     }
 
     // ENHANCED: AI Chat with Story Wizard with better context

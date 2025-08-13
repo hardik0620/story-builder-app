@@ -85,10 +85,10 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // CORS configuration
-console.log('🌐 Setting up CORS...');
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    credentials: true,
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
     optionsSuccessStatus: 200,
 };
 
@@ -107,7 +107,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Health check endpoint
 console.log('💓 Setting up health check endpoint...');
-app.get('/api/health', (req, res) => {
+app.post('/api/healthCheck', (req, res) => {
     res.status(200).json({
         status: 'OK',
         message: 'Story Weaver API is running',
@@ -213,10 +213,10 @@ const startServer = async () => {
             console.log(`🚀 Story Weaver API server running on port ${finalPort}`);
             console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
             console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
-            console.log(`🔗 API Health Check: http://localhost:${finalPort}/api/health`);
+            console.log(`🔗 API Health Check: http://localhost:${finalPort}/api/healthCheck`);
             console.log('');
             console.log('🎯 Available endpoints:');
-            console.log(`  GET  http://localhost:${finalPort}/api/health`);
+            console.log(`  POST  http://localhost:${finalPort}/api/healthCheck`);
             console.log(`  GET  http://localhost:${finalPort}/api/ai/test`);
             console.log(`  POST http://localhost:${finalPort}/api/ai/chat`);
             console.log(`  POST http://localhost:${finalPort}/api/ai/writing-suggestions`);

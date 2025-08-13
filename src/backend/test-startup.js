@@ -43,7 +43,7 @@ try {
     console.log('✅ Express app configured successfully');
 
     console.log('7. Testing health endpoint...');
-    app.get('/api/health', (req, res) => {
+    app.post('/api/healthCheck', (req, res) => {
         res.json({
             status: 'OK',
             message: 'Story Weaver API is running',

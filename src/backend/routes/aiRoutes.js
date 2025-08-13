@@ -242,7 +242,7 @@ router.post('/explain-function', [
 });
 
 // Health check for AI services
-router.get('/health', (req, res) => {
+router.post('/healthCheck', (req, res) => {
     res.json({
         success: true,
         message: 'AI services are running',

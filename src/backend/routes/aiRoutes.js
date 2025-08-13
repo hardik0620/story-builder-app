@@ -259,4 +259,28 @@ router.post('/healthCheck', (req, res) => {
 
 console.log('📝 Enhanced AI routes configured successfully with Gemini integration');
 
+// POST /api/ai/analyze-quality - Analyze English quality using Gemini
+router.post('/analyze-quality', async (req, res) => {
+    try {
+        const { storyText } = req.body;
+
+        if (!storyText || storyText.trim().length === 0) {
+            return res.status(400).json({
+                success: false,
+                error: 'Story text is required'
+            });
+        }
+
+        const result = await aiController.analyzeEnglishQuality(storyText);
+        res.json(result);
+    } catch (error) {
+        console.error('English quality analysis error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to analyze English quality',
+            details: error.message
+        });
+    }
+});
+
 module.exports = router;

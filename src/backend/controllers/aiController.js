@@ -58,30 +58,61 @@ exports.handleChat = async (req, res) => {
         const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-        const prompt = `You are the Story Wizard, a helpful AI assistant for a young writer creating a ${storyData.theme || 'adventure'} story.
+        let prompt;
+        if (currentStep === 2) {
+            prompt = `You are the Story Wizard, a helpful AI assistant for a young writer creating a ${storyData.theme || 'adventure'} story.
 
-STORY CONTEXT:
-${storyContext}
+    STORY CONTEXT:
+    ${storyContext}
 
-CURRENT PROGRESS:
-${currentProgress}
+    CURRENT PROGRESS:
+    ${currentProgress}
 
-USER'S QUESTION:
-"${message}"
+    PROPP'S FUNCTIONS KNOWLEDGE DATABASE:
+    ${JSON.stringify(PROPP_KNOWLEDGE_DATABASE, null, 2)}
 
-Respond as the Story Wizard:
-1. Be encouraging, friendly, and enthusiastic
-2. Keep response focused and concise (2-3 sentences)
-3. Use 1-2 emojis maximum
-4. Give specific, actionable advice
-5. Match the tone to the story's theme
-6. Address the user's question directly
-7. Consider their current story progress
-8. Include constructive suggestions
-9. Maintain child-friendly language
-10. End with gentle encouragement
+    USER'S QUESTION:
+    "${message}"
 
-Response:`;
+    Respond as the Story Wizard:
+    1. Be encouraging, friendly, and enthusiastic
+    2. Keep response focused and concise (2-3 sentences)
+    3. Use 1-2 emojis maximum
+    4. Give specific, actionable advice
+    5. Match the tone to the story's theme
+    6. Address the user's question directly
+    7. Consider their current story progress
+    8. Include constructive suggestions
+    9. Maintain child-friendly language
+    10. End with gentle encouragement
+
+    Response:`;
+        } else {
+            prompt = `You are the Story Wizard, a helpful AI assistant for a young writer creating a ${storyData.theme || 'adventure'} story.
+
+    STORY CONTEXT:
+    ${storyContext}
+
+    CURRENT PROGRESS:
+    ${currentProgress}
+
+    USER'S QUESTION:
+    "${message}"
+
+    Respond as the Story Wizard:
+    1. Be encouraging, friendly, and enthusiastic
+    2. Keep response focused and concise (2-3 sentences)
+    3. Use 1-2 emojis maximum
+    4. Give specific, actionable advice
+    5. Match the tone to the story's theme
+    6. Address the user's question directly
+    7. Consider their current story progress
+    8. Include constructive suggestions
+    9. Maintain child-friendly language
+    10. End with gentle encouragement
+
+    Response:`;
+        }
 
         try {
             console.log('🔍 Sending chat request to Gemini');
@@ -666,6 +697,107 @@ if (!genAI) {
 }
 // This allows the application to run without Gemini while still providing useful responses from the knowledge database.
 // This file is now ready to be used in the backend with enhanced AI capabilities and a comprehensive knowledge database.
+exports.analyzeEnglishQuality = async (storyText) => {
+    try {
+        console.log('🎯 Analyzing English quality for story...');
+
+        const prompt = `Please analyze the English quality of this story written by a young writer. Consider their age-appropriate language level and creative expression.
+
+Story to analyze:
+"${storyText}"
+
+Please evaluate based on these criteria suitable for young writers:
+1. Grammar and sentence structure (age-appropriate)
+2. Vocabulary usage and variety
+3. Story coherence and flow
+4. Creative expression and imagination
+5. Basic punctuation and spelling
+
+Provide a score between 0-100 where:
+- 0-30: Needs significant improvement
+- 31-50: Shows promise, needs practice
+- 51-70: Good effort with room to grow
+- 71-85: Well done for a young writer
+- 86-100: Exceptional writing for any age
+
+Be encouraging and consider this is a young, learning writer. Focus on creativity and effort as much as technical accuracy.
+
+Please respond with ONLY a number between 0-100, nothing else.`;
+
+        let response;
+        if (geminiModel) {
+            const result = await geminiModel.generateContent(prompt);
+            response = result.response.text();
+        } else {
+            // Use basic analysis as fallback
+            return {
+                success: true,
+                score: basicEnglishQualityAnalysis(storyText),
+                message: 'Analysis completed using basic method',
+                fallback: true,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        // Extract just the number from the response
+        const scoreMatch = response.match(/\b(\d{1,3})\b/);
+        const score = scoreMatch ? Math.min(100, Math.max(0, parseInt(scoreMatch[1]))) : 75; // Default to 75 if parsing fails
+
+        console.log(`✅ English quality analysis complete. Score: ${score}/100`);
+
+        return {
+            success: true,
+            score: score,
+            message: score >= 85 ? 'Exceptional writing!' :
+                score >= 71 ? 'Great job! Keep writing!' :
+                    score >= 51 ? 'Good effort! You\'re improving!' :
+                        score >= 31 ? 'Nice try! Keep practicing!' :
+                            'Great start! Every writer begins somewhere!',
+            timestamp: new Date().toISOString()
+        };
+
+    } catch (error) {
+        console.error('❌ English quality analysis failed:', error);
+
+        // Fallback to basic analysis if Gemini fails
+        const fallbackScore = basicEnglishQualityAnalysis(storyText);
+
+        return {
+            success: true,
+            score: fallbackScore,
+            message: 'Analysis completed using basic method',
+            fallback: true,
+            timestamp: new Date().toISOString()
+        };
+    }
+};
+
+// Fallback basic English quality analysis
+const basicEnglishQualityAnalysis = (text) => {
+    const sentences = text.split(/[.!?]+/).filter(Boolean);
+    const words = text.split(/\s+/).filter(Boolean);
+
+    if (words.length === 0) return 30; // Minimum encouraging score
+
+    // Average sentence length (ideal is between 10-15 for young writers)
+    const avgSentenceLength = words.length / Math.max(sentences.length, 1);
+    const sentenceLengthScore = Math.min(100, 100 - Math.abs(12.5 - avgSentenceLength) * 3);
+
+    // Vocabulary diversity (unique words ratio)
+    const uniqueWords = new Set(words.map(w => w.toLowerCase().replace(/[^]/g, '')));
+    const vocabularyScore = Math.min(100, (uniqueWords.size / words.length) * 150);
+
+    // Story length bonus (encourage longer stories)
+    const lengthBonus = Math.min(20, words.length / 50);
+
+    // Final score (weighted average with bonuses)
+    const finalScore = Math.round(
+        (sentenceLengthScore * 0.3 + vocabularyScore * 0.5 + lengthBonus + 20) // +20 base encouragement score
+    );
+
+    return Math.min(100, Math.max(30, finalScore)); // Minimum 30 to be encouraging
+};
+
 module.exports = {
     handleChat: exports.handleChat,
     generateSuggestions: exports.generateSuggestions,
@@ -673,7 +805,8 @@ module.exports = {
     completeStory: exports.completeStory,
     evaluateStory: exports.evaluateStory,
     explainProppFunction: exports.explainProppFunction,
-    healthCheck: exports.healthCheck
+    healthCheck: exports.healthCheck,
+    analyzeEnglishQuality: exports.analyzeEnglishQuality
 };
 // Ensure to export all functions for use in routes
 // This file is now ready to be used in the backend with enhanced AI capabilities and a comprehensive knowledge database.

@@ -18,41 +18,57 @@ const Step5Review = ({ nextStep, previousStep, storyData, setStoryData }) => {
     });
 
     useEffect(() => {
-        // Calculate story statistics
-        const storyParts = storyData.storyParts || [];
-        const userParts = storyParts.filter(p => p.type === 'user');
-        const aiParts = storyParts.filter(p => p.type === 'ai');
-        const completeStory = generateCompleteStory();
+        const calculateStats = async () => {
+            // Calculate story statistics
+            const storyParts = storyData.storyParts || [];
+            const userParts = storyParts.filter(p => p.type === 'user');
+            const aiParts = storyParts.filter(p => p.type === 'ai');
+            const completeStory = generateCompleteStory();
 
-        const userWords = userParts.reduce((acc, part) => acc + part.text.split(' ').filter(word => word.trim()).length, 0);
-        const aiWords = aiParts.reduce((acc, part) => acc + part.text.split(' ').filter(word => word.trim()).length, 0);
-        const totalWords = userWords + aiWords;
-        const userPercentage = totalWords > 0 ? Math.round((userWords / totalWords) * 100) : 0;
+            const userWords = userParts.reduce((acc, part) => acc + part.text.split(' ').filter(word => word.trim()).length, 0);
+            const aiWords = aiParts.reduce((acc, part) => acc + part.text.split(' ').filter(word => word.trim()).length, 0);
+            const totalWords = userWords + aiWords;
+            const userPercentage = totalWords > 0 ? Math.round((userWords / totalWords) * 100) : 0;
 
-        // Calculate time spent (using actual start time)
-        const timeSpent = Math.max(1, Math.round((new Date() - new Date(storyData.startTime || Date.now())) / 60000));
+            // Calculate time spent (using actual start time)
+            const timeSpent = Math.max(1, Math.round((new Date() - new Date(storyData.startTime || Date.now())) / 60000));
 
-        // Analyze English quality
-        const englishAnalysis = analyzeEnglishQuality(completeStory);
+            // Analyze English quality (now async)
+            let englishQuality = 50; // Default fallback score
+            try {
+                const englishAnalysis = await analyzeEnglishQuality(completeStory);
+                englishQuality = englishAnalysis.score || 50;
+                console.log('English analysis result:', englishAnalysis);
+            } catch (error) {
+                console.error('Error analyzing English quality:', error);
+            }
 
-        const stats = {
-            totalWords,
-            userWords,
-            aiWords,
-            userPercentage,
-            aiSuggestions: storyData.aiSuggestionsUsed || aiParts.length,
-            timeSpent,
-            englishQuality: englishAnalysis.score
+            const stats = {
+                totalWords,
+                userWords,
+                aiWords,
+                userPercentage,
+                aiSuggestions: storyData.aiSuggestionsUsed || aiParts.length,
+                timeSpent,
+                englishQuality
+            };
+
+            console.log('Calculated stats:', stats);
+
+            // Calculate earned badges
+            const newEarnedBadges = calculateEarnedBadges(stats);
+            console.log('Earned badges:', newEarnedBadges);
+
+            setStoryStats({
+                ...stats,
+                earnedBadges: newEarnedBadges
+            });
         };
 
-        // Calculate earned badges
-        const newEarnedBadges = calculateEarnedBadges(stats);
-
-        setStoryStats({
-            ...stats,
-            earnedBadges: newEarnedBadges
-        });
-    }, [storyData]);
+        if (storyData && storyData.storyParts && storyData.storyParts.length > 0) {
+            calculateStats();
+        }
+    }, [storyData.storyParts]);
 
     const generateCompleteStory = () => {
         if (!storyData.storyParts || storyData.storyParts.length === 0) {
@@ -370,40 +386,51 @@ const Step5Review = ({ nextStep, previousStep, storyData, setStoryData }) => {
             </div>
 
             {/* Badges Section */}
-            {
-                storyStats.earnedBadges && storyStats.earnedBadges.length > 0 && (
+            {/* Badges Section */}
+            <div style={{
+                margin: '20px 0',
+                padding: '20px',
+                background: 'linear-gradient(135deg, #ffeaa7, #fdcb6e)',
+                borderRadius: '20px',
+                color: '#2d3436'
+            }}>
+                <h4 style={{ margin: '0 0 15px 0', textAlign: 'center' }}>🏆 Earned Badges</h4>
+                {storyStats.earnedBadges && storyStats.earnedBadges.length > 0 ? (
                     <div style={{
-                        margin: '20px 0',
-                        padding: '20px',
-                        background: 'linear-gradient(135deg, #ffeaa7, #fdcb6e)',
-                        borderRadius: '20px',
-                        color: '#2d3436'
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                        gap: '15px'
                     }}>
-                        <h4 style={{ margin: '0 0 15px 0', textAlign: 'center' }}>🏆 Earned Badges</h4>
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                            gap: '15px'
-                        }}>
-                            {storyStats.earnedBadges.map((badge) => (
-                                <div key={badge.id} style={{
-                                    background: 'rgba(255, 255, 255, 0.7)',
-                                    padding: '15px',
-                                    borderRadius: '15px',
-                                    textAlign: 'center',
-                                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-                                }}>
-                                    <div style={{ fontSize: '2em' }}>{badge.title.split(' ')[0]}</div>
-                                    <div style={{ fontWeight: 'bold', margin: '5px 0' }}>{badge.title.split(' ').slice(1).join(' ')}</div>
-                                    <div style={{ fontSize: '0.9em', color: '#666' }}>{badge.description}</div>
-                                </div>
-                            ))}
+                        {storyStats.earnedBadges.map((badge) => (
+                            <div key={badge.id} style={{
+                                background: 'rgba(255, 255, 255, 0.7)',
+                                padding: '15px',
+                                borderRadius: '15px',
+                                textAlign: 'center',
+                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                            }}>
+                                <div style={{ fontSize: '2em' }}>{badge.title.split(' ')[0]}</div>
+                                <div style={{ fontWeight: 'bold', margin: '5px 0' }}>{badge.title.split(' ').slice(1).join(' ')}</div>
+                                <div style={{ fontSize: '0.9em', color: '#666' }}>{badge.description}</div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div style={{
+                        textAlign: 'center',
+                        padding: '20px',
+                        background: 'rgba(255, 255, 255, 0.7)',
+                        borderRadius: '15px',
+                        color: '#666'
+                    }}>
+                        <div style={{ fontSize: '2em', marginBottom: '10px' }}>🎯</div>
+                        <div>Keep writing to earn badges!</div>
+                        <div style={{ fontSize: '0.9em', marginTop: '5px' }}>
+                            Badges unlock as you reach milestones in your story.
                         </div>
                     </div>
-                )
-            }
-
-            <div className="export-options">
+                )}
+            </div>            <div className="export-options">
                 <button className="button primary large" onClick={exportToPDF}>
                     📄 Download PDF
                 </button>

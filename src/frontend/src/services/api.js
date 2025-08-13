@@ -225,6 +225,14 @@ class ApiService {
         return this.makeRequest('/ai/test');
     }
 
+    // Analyze English quality using Gemini
+    async analyzeEnglishQuality(storyText) {
+        return this.makeRequest('/quality/analyze', {
+            method: 'POST',
+            body: JSON.stringify({ storyText }),
+        });
+    }
+
     // Enhanced error handling with retry logic and exponential backoff
     async makeRequestWithRetry(endpoint, options = {}, maxRetries = 3) {
         let lastError;
@@ -355,6 +363,7 @@ export const {
     updateUserPreferences,
     getUserStats,
     testAI,
+    analyzeEnglishQuality,
     makeRequestWithRetry,
     getContextualHelp,
     getSmartSuggestion,

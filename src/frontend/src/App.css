@@ -356,6 +356,11 @@ body {
   transform: scale(1.05);
 }
 
+body.dark-theme .step-container label,
+body.dark-theme .step-container p {
+  color: #ddd !important;
+}
+
 .step-container {
   display: none;
   min-height: 400px;
@@ -368,6 +373,10 @@ body {
 .step-header {
   text-align: center;
   margin-bottom: 25px;
+}
+
+body.dark-theme .step-title {
+  color: #ddd;
 }
 
 .step-title {
@@ -961,6 +970,12 @@ body.nature-theme .ai-helper-integrated {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
   border: 3px solid #333;
+}
+
+body.dark-theme .propp-card {
+  background: linear-gradient(135deg, #636e72, #2d3436);
+  color: #ddd;
+  border-color: #555;
 }
 
 .propp-card {

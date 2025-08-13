@@ -25,7 +25,7 @@ const Step0Welcome = ({ nextStep, showGallery }) => {
     return (
         <div className="step-container active">
             <div className="step-header">
-                <h1 className="step-title">🌟 Welcome to Story Builder! 🌟</h1>
+                <h1 className="step-title">🌟 Welcome to Story Weaver! 🌟</h1>
                 <p style={{ fontSize: '1.2em', color: '#636e72', margin: 0 }}>
                     Where imagination meets technology!
                 </p>

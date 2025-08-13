@@ -85,15 +85,16 @@ function App() {
 
     // Load saved progress
     const savedProgress = localStorage.getItem('storyProgress');
-    if (savedProgress) {
+    const progress = JSON.parse(savedProgress);
+    if (savedProgress && progress.storyData && progress.storyData.title) {
       try {
-        const progress = JSON.parse(savedProgress);
         if (progress.storyData && window.confirm("Would you like to continue your previous story?")) {
-          setStoryData(progress.storyData);
-          setCurrentStep(progress.currentStep || 4);
+          // Use functional updates to avoid dependency warnings
+          setStoryData(() => progress.storyData);
+          setCurrentStep(() => progress.currentStep || 4);
 
           if (progress.currentUser) {
-            setCurrentUser(progress.currentUser);
+            setCurrentUser(() => progress.currentUser);
           }
         }
       } catch (error) {
@@ -104,8 +105,8 @@ function App() {
     // Load accessibility settings
     const savedBigText = localStorage.getItem('bigTextEnabled') === 'true';
     const savedContrast = parseInt(localStorage.getItem('contrastLevel') || '100');
-    setIsBigText(savedBigText);
-    setContrast(savedContrast);
+    setIsBigText(() => savedBigText);
+    setContrast(() => savedContrast);
 
     if (savedBigText) {
       document.body.style.fontSize = '1.3em';
@@ -121,7 +122,7 @@ function App() {
     return () => {
       window.removeEventListener('showGallery', handleShowGallery);
     };
-  }, []);
+  }, []); // Empty dependency array ensures single execution
 
   // Save settings when they change
   useEffect(() => {

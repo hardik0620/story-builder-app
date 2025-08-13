@@ -1,7 +1,7 @@
 {
   "name": "story-builder-backend",
   "version": "1.0.0",
-  "description": "Backend API for Story Builder application using Propp's narrative functions",
+  "description": "Backend API for Story Weaver application using Propp's narrative functions",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

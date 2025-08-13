@@ -121,7 +121,7 @@ const Step2Functions = ({ nextStep, previousStep, storyData, setStoryData, backe
 
         const tooltipStyle = {
             position: 'absolute',
-            left: tooltipPosition.x - 325, // Center the tooltip (300px width / 2)
+            left: tooltipPosition.x - 510, // Center the tooltip (300px width / 2)
             top: tooltipPosition.y - 460, // Position above the question mark
             width: '300px',
             background: 'linear-gradient(135deg, #6c5ce7, #a29bfe)',
@@ -282,7 +282,7 @@ const Step2Functions = ({ nextStep, previousStep, storyData, setStoryData, backe
                         background: 'rgba(255,255,255,0.2)',
                         borderRadius: '10px'
                     }}>
-                        🔍 Click to learn more about these story components!
+                        Click to learn more about these story components!
                     </summary>
                     <div style={{
                         padding: '15px',

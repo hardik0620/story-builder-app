@@ -1,5 +1,5 @@
 // backend/server.js - Enhanced with port checking
-console.log('🚀 Starting Story Builder server...');
+console.log('🚀 Starting Story Weaver server...');
 
 const express = require('express');
 const cors = require('cors');
@@ -110,7 +110,7 @@ console.log('💓 Setting up health check endpoint...');
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         status: 'OK',
-        message: 'Story Builder API is running',
+        message: 'Story Weaver API is running',
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || 'development',
         port: PORT
@@ -210,7 +210,7 @@ const startServer = async () => {
         }
 
         const server = app.listen(finalPort, () => {
-            console.log(`🚀 Story Builder API server running on port ${finalPort}`);
+            console.log(`🚀 Story Weaver API server running on port ${finalPort}`);
             console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
             console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
             console.log(`🔗 API Health Check: http://localhost:${finalPort}/api/health`);

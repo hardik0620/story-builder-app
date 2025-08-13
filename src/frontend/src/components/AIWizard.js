@@ -42,15 +42,13 @@ const AIWizard = ({ currentStep, storyData, backendConnected }) => {
         try {
             if (backendConnected) {
                 // FIXED: Use real API call instead of always falling back
-                console.log('🧙‍♂️ Sending to Gemini API:', userMessage.text);
+                console.log('🧙‍♂️ Your AI buddy is thinking...', userMessage.text);
 
                 const response = await apiService.chatWithWizard(
                     userMessage.text,
                     currentStep,
                     storyData
                 );
-
-                console.log('🧙‍♂️ Gemini API Response:', response);
 
                 if (response.success && response.response) {
                     const aiResponse = {
@@ -194,7 +192,7 @@ const AIWizard = ({ currentStep, storyData, backendConnected }) => {
                             🧙‍♂️ AI Story Wizard
                         </h3>
                         <small style={{ opacity: 0.8 }}>
-                            {backendConnected ? '🟢 Gemini AI Connected' : '🔴 Offline Mode'}
+                            {backendConnected ? '🟢 Connected' : '🔴 Offline Mode'}
                         </small>
                     </div>
                     <div style={{ display: 'flex', gap: '5px' }}>

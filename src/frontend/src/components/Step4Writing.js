@@ -609,7 +609,7 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                             style={{ background: textFormatting.textAlign === 'left' ? '#ffeaa7' : 'white' }}
                             title="Align Left"
                         >
-                            ⬅️
+                            <i className="fas fa-align-left"></i>
                         </button>
                         <button
                             className="toolbar-btn"
@@ -617,7 +617,7 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                             style={{ background: textFormatting.textAlign === 'center' ? '#ffeaa7' : 'white' }}
                             title="Align Center"
                         >
-                            ↔️
+                            <i className="fas fa-align-center"></i>
                         </button>
                         <button
                             className="toolbar-btn"
@@ -625,7 +625,7 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                             style={{ background: textFormatting.textAlign === 'right' ? '#ffeaa7' : 'white' }}
                             title="Align Right"
                         >
-                            ➡️
+                            <i className="fas fa-align-right"></i>
                         </button>
                         {/* <button
                             className="toolbar-btn"
@@ -667,9 +667,9 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                             className="toolbar-btn"
                             onClick={resetTextFormatting}
                             title="Reset Formatting"
-                            style={{ marginLeft: '10px', background: '#ff6b6b', color: 'white' }}
+                            style={{ marginLeft: '10px', background: '#ffffffff', color: 'black' }}
                         >
-                            🔄
+                            🔄 Reset
                         </button>
                     </div>
 
@@ -906,7 +906,7 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
             </div>
 
             {/* Story Progress */}
-            <div style={{
+            {/* <div style={{
                 margin: '20px 0',
                 padding: '15px',
                 background: 'rgba(0, 184, 148, 0.1)',
@@ -929,7 +929,7 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                     </div>
                     <div style={{ fontSize: '2em' }}>📈</div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="navigation">
                 <button className="nav-btn" onClick={previousStep}>← Back</button>

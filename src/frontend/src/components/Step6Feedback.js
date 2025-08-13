@@ -13,7 +13,7 @@ const Step6Feedback = ({ resetStory, storyData, currentUser, showGallery }) => {
         const messages = [
             '',
             "Thanks for the feedback! We'll work on making it better! 🌟",
-            "Thank you! We're glad you tried our story builder! 😊",
+            "Thank you! We're glad you tried our Story Weaver! 😊",
             "Wonderful! We're happy you enjoyed the experience! 🎉",
             "Amazing! We're so glad you loved writing with us! ✨",
             "Fantastic! You're an amazing story creator! 🏆⭐"
@@ -31,7 +31,7 @@ const Step6Feedback = ({ resetStory, storyData, currentUser, showGallery }) => {
         const messages = {
             'yes': "Yay! I can't wait to help you write more amazing stories using Propp's functions! 🚀📚",
             'maybe': "That's okay! I'll be here whenever you're ready for another adventure! 😊",
-            'no': "No problem! Thanks for trying Story Builder. Maybe next time! 🌟"
+            'no': "No problem! Thanks for trying Story Weaver. Maybe next time! 🌟"
         };
 
         console.log(messages[choice]);
@@ -52,11 +52,11 @@ const Step6Feedback = ({ resetStory, storyData, currentUser, showGallery }) => {
     };
 
     const shareSuccess = () => {
-        const successText = `I just created an amazing story using Story Builder and Propp's morphology! 🏆📚 Check out this AI-powered storytelling tool!`;
+        const successText = `I just created an amazing story using Story Weaver and Propp's morphology! 🏆📚 Check out this AI-powered storytelling tool!`;
 
         if (navigator.share) {
             navigator.share({
-                title: 'Story Builder Success!',
+                title: 'Story Weaver Success!',
                 text: successText,
                 url: window.location.href
             });
@@ -101,7 +101,7 @@ const Step6Feedback = ({ resetStory, storyData, currentUser, showGallery }) => {
         existingFeedback.push(feedbackData);
         localStorage.setItem('userFeedback', JSON.stringify(existingFeedback));
 
-        alert("Thank you for your feedback! It helps us make Story Builder even better! 🌟");
+        alert("Thank you for your feedback! It helps us make Story Weaver even better! 🌟");
     };
 
     return (

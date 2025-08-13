@@ -3,10 +3,6 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { PROPP_KNOWLEDGE_DATABASE, PROPP_HELPER_FUNCTIONS } = require('../data/proppKnowledgeDatabase');
 const fetch = require('node-fetch');
 
-// Initialize Gemini client
-let genAI = null;
-let geminiModel = null;
-
 if (process.env.GOOGLE_GEMINI_API_KEY) {
     genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY);
     geminiModel = genAI.getGenerativeModel({
@@ -41,7 +37,7 @@ if (process.env.GOOGLE_GEMINI_API_KEY) {
     console.warn('⚠️  Google Gemini API key not found. Using knowledge database fallback.');
 }
 
-// ENHANCED: AI Chat Handler with Knowledge Database
+// ENHANCED: AI Chat Handler with Gemini Integration
 exports.handleChat = async (req, res) => {
     try {
         const { message, currentStep = 0, storyData = {} } = req.body;
@@ -53,70 +49,122 @@ exports.handleChat = async (req, res) => {
             currentScene: storyData.elementOrder?.[0]?.id
         });
 
-        // Get current scene for context
         const currentSceneId = getCurrentSceneId(storyData, currentStep);
 
-        // Try to get response from knowledge database first
-        const knowledgeResponse = PROPP_HELPER_FUNCTIONS.findRelevantResponse(
-            message,
-            currentSceneId,
-            storyData.theme
-        );
+        // Get background context from story data
+        const storyContext = generateStoryContext(storyData);
+        const currentProgress = analyzeStoryProgress(storyData);
 
-        let finalResponse;
+        const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-        if (geminiModel && shouldUseAI(message)) {
-            try {
-                // Create enhanced prompt with knowledge base context
-                const enhancedPrompt = createEnhancedPrompt(message, currentStep, storyData, knowledgeResponse);
+        const prompt = `You are the Story Wizard, a helpful AI assistant for a young writer creating a ${storyData.theme || 'adventure'} story.
 
-                console.log('🤖 Sending enhanced prompt to Gemini');
-                const aiResponse = await geminiModel.generateContent(enhancedPrompt);
-                const aiText = await aiResponse.response.text();
+STORY CONTEXT:
+${storyContext}
 
-                // Combine AI response with knowledge base tip
-                finalResponse = {
+CURRENT PROGRESS:
+${currentProgress}
+
+USER'S QUESTION:
+"${message}"
+
+Respond as the Story Wizard:
+1. Be encouraging, friendly, and enthusiastic
+2. Keep response focused and concise (2-3 sentences)
+3. Use 1-2 emojis maximum
+4. Give specific, actionable advice
+5. Match the tone to the story's theme
+6. Address the user's question directly
+7. Consider their current story progress
+8. Include constructive suggestions
+9. Maintain child-friendly language
+10. End with gentle encouragement
+
+Response:`;
+
+        try {
+            console.log('🔍 Sending chat request to Gemini');
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+
+            const geminiRes = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            console.log('Gemini response status:', geminiRes.status);
+            const geminiData = await geminiRes.json();
+            console.log('Gemini response:', geminiData);
+
+            const aiResponse = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+
+            if (aiResponse) {
+                res.json({
                     success: true,
-                    response: aiText,
-                    tip: knowledgeResponse.tip,
-                    writingPrompt: knowledgeResponse.writingPrompt,
-                    sceneContext: knowledgeResponse.sceneContext,
+                    response: aiResponse,
+                    currentStep,
+                    sceneId: currentSceneId,
+                    timestamp: new Date().toISOString(),
                     source: 'ai_enhanced'
-                };
-
-            } catch (aiError) {
-                console.log('🔄 AI failed, using knowledge base:', aiError.message);
-                finalResponse = formatKnowledgeResponse(knowledgeResponse);
+                });
+            } else {
+                throw new Error('Empty AI response');
             }
-        } else {
-            // Use knowledge database response
-            finalResponse = formatKnowledgeResponse(knowledgeResponse);
+        } catch (aiError) {
+            console.log('🔄 AI failed, using knowledge base:', aiError.message);
+            const knowledgeResponse = PROPP_HELPER_FUNCTIONS.findRelevantResponse(
+                message,
+                currentSceneId,
+                storyData.theme
+            );
+            res.json(formatKnowledgeResponse(knowledgeResponse));
         }
-
-        res.json({
-            ...finalResponse,
-            timestamp: new Date().toISOString(),
-            sceneId: currentSceneId
-        });
-
     } catch (error) {
         console.error('AI Chat Error:', error);
-
-        // Fallback to simple knowledge response
         const fallbackResponse = PROPP_HELPER_FUNCTIONS.getGenericResponse(
             req.body.message || '',
             req.body.storyData?.theme || 'adventure'
         );
-
         res.json({
             success: true,
             response: fallbackResponse.response + " 🌟",
-            tip: fallbackResponse.tip,
-            writingPrompt: fallbackResponse.writingPrompt,
             timestamp: new Date().toISOString(),
             source: 'fallback'
         });
     }
+};
+
+// Helper function to generate story context from storyData
+function generateStoryContext(storyData) {
+    // Safely handle elementsUsed - ensure it's an array
+    const elementsUsed = Array.isArray(storyData.elementsUsed) ? storyData.elementsUsed.join(', ') : 'None';
+
+    return `Title: ${storyData.title || 'Untitled Story'}
+Theme: ${storyData.theme || 'Adventure'}
+Story Elements: ${storyData.selectedElements?.length || 0} Propp functions selected
+Current Scene: ${storyData.currentSceneName || 'Not started'}
+Total Words: ${storyData.totalWords || 0} words written
+Elements Used: ${elementsUsed}
+Story Structure: ${storyData.storyStructure || 'Classic narrative'}`
+}
+
+// Helper function to analyze story progress
+function analyzeStoryProgress(storyData) {
+    const progress = {
+        wordCount: storyData.userWordCount + storyData.aiWordCount,
+        scenesCompleted: storyData.storyParts?.length || 0,
+        timeSpent: storyData.startTime ?
+            Math.floor((new Date() - new Date(storyData.startTime)) / 60000) :
+            0
+    };
+
+    return `Words Written: ${progress.wordCount}
+Scenes Completed: ${progress.scenesCompleted}
+Time Spent: ${progress.timeSpent} minutes
+AI Suggestions Used: ${storyData.aiSuggestionsUsed || 0}`
 };
 
 // FIXED: Generate single contextual suggestion

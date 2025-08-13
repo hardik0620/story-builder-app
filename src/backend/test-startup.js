@@ -46,7 +46,7 @@ try {
     app.get('/api/health', (req, res) => {
         res.json({
             status: 'OK',
-            message: 'Story Builder API is running',
+            message: 'Story Weaver API is running',
             timestamp: new Date().toISOString(),
             environment: process.env.NODE_ENV || 'development'
         });

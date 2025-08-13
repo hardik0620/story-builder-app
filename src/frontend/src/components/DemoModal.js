@@ -6,11 +6,11 @@ const DemoModal = ({ closeModal }) => {
         <div className="demo-modal" style={{ display: 'block' }}>
             <div className="demo-content">
                 <button className="close-demo" onClick={closeModal}>×</button>
-                <h2 style={{ color: '#2d3436', marginBottom: '20px' }}>🎬 How Story Builder Works</h2>
+                <h2 style={{ color: '#2d3436', marginBottom: '20px' }}>🎬 How Story Weaver Works</h2>
 
                 <div style={{ margin: '20px 0' }}>
                     <h3 style={{ color: '#6c5ce7' }}>📖 Based on Propp's Morphology</h3>
-                    <p>Our Story Builder is based on Vladimir Propp's famous study of fairy tales. Propp identified 31 functions that appear in folk stories, creating a blueprint for compelling narratives.</p>
+                    <p>Our Story Weaver is based on Vladimir Propp's famous study of fairy tales. Propp identified 31 functions that appear in folk stories, creating a blueprint for compelling narratives.</p>
                 </div>
 
                 <div style={{ margin: '20px 0' }}>
@@ -77,7 +77,7 @@ const DemoModal = ({ closeModal }) => {
                 </div>
 
                 <div style={{ margin: '20px 0' }}>
-                    <h3 style={{ color: '#6c5ce7' }}>🎓 How to Use Story Builder</h3>
+                    <h3 style={{ color: '#6c5ce7' }}>🎓 How to Use Story Weaver</h3>
                     <div style={{ background: 'linear-gradient(135deg, #74b9ff, #0984e3)', color: 'white', padding: '20px', borderRadius: '15px', border: '3px solid #333' }}>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
                             <div>

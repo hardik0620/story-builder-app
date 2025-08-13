@@ -156,7 +156,7 @@ const LoginPage = ({ onLogin }) => {
 
             // Show success message for new signups
             if (currentView === 'signup' && type === 'email') {
-                alert(`🎉 Welcome to Story Builder, ${userData.name}! Your account has been created successfully.`);
+                alert(`🎉 Welcome to Story Weaver, ${userData.name}! Your account has been created successfully.`);
             }
 
             console.log('🔐 Login successful with user data:', userData);
@@ -501,7 +501,7 @@ const LoginPage = ({ onLogin }) => {
 
                         <div className="terms-section">
                             <div className="terms-content">
-                                <h4>📜 Story Builder Terms of Service</h4>
+                                <h4>📜 Story Weaver Terms of Service</h4>
                                 <ul>
                                     <li>✅ Your stories and creations belong to you</li>
                                     <li>✅ We protect your privacy and data</li>
@@ -552,7 +552,7 @@ const LoginPage = ({ onLogin }) => {
     return (
         <div className="login-container">
             <div className="login-logo">📚✨</div>
-            <h1 className="login-title">Story Builder</h1>
+            <h1 className="login-title">Story Weaver</h1>
             <p className="login-subtitle">Create magical stories with AI and Propp's morphology!</p>
 
             {/* Navigation Tabs */}

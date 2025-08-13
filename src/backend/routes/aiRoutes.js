@@ -97,9 +97,10 @@ router.get('/test', (req, res) => {
     });
 });
 
-// FIXED: AI Chat endpoint - Enhanced for Story Wizard
+// AI Chat endpoint - Enhanced for Story Wizard
 router.post('/chat', validateChatRequest, handleValidationErrors, (req, res) => {
     try {
+        console.log('🧙‍♂️ AI Chat request received:', req.body)
         console.log('🧙‍♂️ AI Chat request received:', {
             messageLength: req.body.message?.length || 0,
             currentStep: req.body.currentStep,

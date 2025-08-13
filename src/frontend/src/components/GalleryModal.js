@@ -60,7 +60,7 @@ ${story.content}
                 readingWindow.document.write(`
                     <html>
                         <head>
-                            <title>${story.title} - Story Builder</title>
+                            <title>${story.title} - Story Weaver</title>
                             <style>
                                 body {
                                     font-family: Georgia, serif;
@@ -114,7 +114,7 @@ ${story.content}
                             <button class="close-btn" onclick="window.close()">✖️ Close</button>
                             <div class="header">
                                 <h1>${story.title}</h1>
-                                <p>📖 A Story Builder Creation</p>
+                                <p>📖 A Story Weaver Creation</p>
                             </div>
                             <div class="story-content">${story.content}</div>
                             <div class="meta">
@@ -138,7 +138,7 @@ ${story.content}
     const shareStoryFromGallery = (storyId) => {
         const story = savedStories.find(s => s.id === storyId);
         if (story) {
-            const shareText = `Check out my story "${story.title}" created with Story Builder! 📚✨\n\n${story.preview}\n\nRead more stories at ${window.location.origin}`;
+            const shareText = `Check out my story "${story.title}" created with Story Weaver! 📚✨\n\n${story.preview}\n\nRead more stories at ${window.location.origin}`;
 
             if (navigator.share) {
                 navigator.share({

@@ -1,4 +1,4 @@
-// src/components/NavigationTabs.js - Compact Version
+// src/components/NavigationTabs.js 
 import React from 'react';
 
 const NavigationTabs = ({
@@ -59,28 +59,27 @@ const NavigationTabs = ({
         }
     ];
 
-    // Determine if a step is accessible
     const getStepAccessibility = (stepId) => {
         if (typeof isStepAccessible === 'function') {
             return isStepAccessible(stepId);
         }
 
-        // Default accessibility logic
+        // Accessibility logic
         switch (stepId) {
             case 0:
-                return true; // Welcome is always accessible
+                return true; 
             case 1:
-                return true; // Theme selection is always accessible after welcome
+                return true; 
             case 2:
-                return storyData.theme && storyData.title; // Need theme and title
+                return storyData.theme && storyData.title; 
             case 3:
-                return storyData.selectedElements && storyData.selectedElements.length >= 3; // Need at least 3 elements
+                return storyData.selectedElements && storyData.selectedElements.length >= 3; 
             case 4:
-                return storyData.elementOrder && storyData.elementOrder.length >= 3; // Need ordered elements
+                return storyData.elementOrder && storyData.elementOrder.length >= 3; 
             case 5:
-                return storyData.storyParts && storyData.storyParts.length > 0; // Need some story content
+                return storyData.storyParts && storyData.storyParts.length > 0; 
             case 6:
-                return storyData.storyParts && storyData.storyParts.length > 0; // Same as review
+                return storyData.storyParts && storyData.storyParts.length > 0; 
             default:
                 return false;
         }
@@ -103,18 +102,15 @@ const NavigationTabs = ({
         }
 
         if (stepId === currentStep) {
-            // Already on this step
             return;
         }
 
-        // Confirm navigation if moving backwards with unsaved changes
         if (stepId < currentStep && currentStep === 4 && storyData.storyParts?.length > 0) {
             if (!window.confirm('⚠️ You have unsaved story content. Are you sure you want to navigate away? Consider saving your progress first.')) {
                 return;
             }
         }
 
-        // Navigate to the step
         if (typeof onStepChange === 'function') {
             onStepChange(stepId);
         }
@@ -128,7 +124,7 @@ const NavigationTabs = ({
 
     return (
         <div className="navigation-tabs-container-compact">
-            {/* Compact Progress Bar */}
+            {/* Progress Bar */}
             <div className="compact-progress">
                 <div className="progress-bar-container-compact">
                     <div
@@ -141,7 +137,7 @@ const NavigationTabs = ({
                 </div>
             </div>
 
-            {/* Compact Navigation Tabs */}
+            {/* Navigation Tabs */}
             <div className="navigation-tabs-compact">
                 {steps.map(step => {
                     const status = getStepStatus(step.id);

@@ -19,7 +19,6 @@ const handleValidationErrors = (req, res, next) => {
 
 // Get user profile (placeholder for future authentication)
 router.get('/profile', (req, res) => {
-    // For now, return a default user profile
     res.json({
         success: true,
         user: {
@@ -49,7 +48,6 @@ router.put('/preferences', [
 ], handleValidationErrors, (req, res) => {
     const { favoriteTheme, writingLevel, aiAssistanceLevel } = req.body;
 
-    // For now, just return success (later save to database)
     res.json({
         success: true,
         message: 'Preferences updated successfully',
@@ -64,7 +62,6 @@ router.put('/preferences', [
 
 // Get user statistics
 router.get('/stats', (req, res) => {
-    // Placeholder statistics
     res.json({
         success: true,
         stats: {

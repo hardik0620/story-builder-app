@@ -1,6 +1,6 @@
 // src/components/Step2Functions.js
 import React, { useState, useRef, useEffect } from 'react';
-import { PROPP_FUNCTIONS } from '../proppFunctions'; // Fallback data
+import { PROPP_FUNCTIONS } from '../proppFunctions'; 
 
 // Try to import API service
 let apiService = null;
@@ -33,7 +33,6 @@ const Step2Functions = ({ nextStep, previousStep, storyData, setStoryData, backe
                 console.log('🧩 Loading Propp functions from backend...');
                 const response = await apiService.getProppFunctions();
                 if (response.success && response.functions) {
-                    // Add species property for compatibility with existing tooltip code
                     const functionsWithSpecies = response.functions.map(func => ({
                         ...func,
                         species: func.species || [`Example of ${func.name}`, `Another ${func.shortName} case`, `More ${func.name} scenarios`]
@@ -75,10 +74,9 @@ const Step2Functions = ({ nextStep, previousStep, storyData, setStoryData, backe
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
-        // Position tooltip directly above the question mark with some padding
         setTooltipPosition({
             x: rect.left + scrollLeft + (rect.width / 2),
-            y: rect.top + scrollTop - 15 // 15px above the question mark
+            y: rect.top + scrollTop - 15 
         });
 
         setHoveredCard(func);
@@ -86,14 +84,12 @@ const Step2Functions = ({ nextStep, previousStep, storyData, setStoryData, backe
 
     const handleQuestionMarkLeave = (event) => {
         event.stopPropagation();
-        // Add a small delay to prevent flickering when moving to tooltip
         setTimeout(() => {
             setHoveredCard(null);
         }, 100);
     };
 
     const handleTooltipMouseEnter = () => {
-        // Keep tooltip visible when hovering over it
         if (hoveredCard) {
             setHoveredCard(hoveredCard);
         }
@@ -115,14 +111,13 @@ const Step2Functions = ({ nextStep, previousStep, storyData, setStoryData, backe
         setShowPopup(false);
     };
 
-    // Render tooltip with improved positioning
     const renderTooltip = () => {
         if (!hoveredCard) return null;
 
         const tooltipStyle = {
             position: 'absolute',
-            left: tooltipPosition.x - 510, // Center the tooltip (300px width / 2)
-            top: tooltipPosition.y - 460, // Position above the question mark
+            left: tooltipPosition.x - 510, 
+            top: tooltipPosition.y - 460, 
             width: '300px',
             background: 'linear-gradient(135deg, #6c5ce7, #a29bfe)',
             color: 'white',
@@ -133,9 +128,9 @@ const Step2Functions = ({ nextStep, previousStep, storyData, setStoryData, backe
             zIndex: 10000,
             fontSize: '0.9em',
             fontWeight: 'bold',
-            pointerEvents: 'auto', // Allow interaction with tooltip
+            pointerEvents: 'auto', 
             animation: 'bounceIn 0.3s ease',
-            transform: 'translateZ(0)', // Force hardware acceleration
+            transform: 'translateZ(0)', 
         };
 
         return (
@@ -193,7 +188,7 @@ const Step2Functions = ({ nextStep, previousStep, storyData, setStoryData, backe
             {/* Tooltip */}
             {renderTooltip()}
 
-            {/* Step 2 Instructions Popup */}
+            {/* Instructions Popup */}
             {showPopup && (
                 <div className="popup-overlay" style={{ display: 'block' }}>
                     <div className="popup-content" style={{ maxWidth: '600px' }}>

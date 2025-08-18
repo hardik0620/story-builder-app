@@ -8,25 +8,21 @@ const basicEnglishQualityAnalysis = (text) => {
     const sentences = text.split(/[.!?]+/).filter(Boolean);
     const words = text.split(/\s+/).filter(Boolean);
 
-    if (words.length === 0) return 30; // Minimum encouraging score
+    if (words.length === 0) return 30; 
 
-    // Average sentence length (ideal is between 10-15 for young writers)
     const avgSentenceLength = words.length / Math.max(sentences.length, 1);
     const sentenceLengthScore = Math.min(100, 100 - Math.abs(12.5 - avgSentenceLength) * 3);
 
-    // Vocabulary diversity (unique words ratio)
     const uniqueWords = new Set(words.map(w => w.toLowerCase().replace(/[^\w]/g, '')));
     const vocabularyScore = Math.min(100, (uniqueWords.size / words.length) * 150);
 
-    // Story length bonus (encourage longer stories)
     const lengthBonus = Math.min(20, words.length / 50);
 
-    // Final score (weighted average with bonuses)
     const finalScore = Math.round(
-        (sentenceLengthScore * 0.3 + vocabularyScore * 0.5 + lengthBonus + 20) // +20 base encouragement score
+        (sentenceLengthScore * 0.3 + vocabularyScore * 0.5 + lengthBonus + 20) 
     );
 
-    return Math.min(100, Math.max(30, finalScore)); // Minimum 30 to be encouraging
+    return Math.min(100, Math.max(30, finalScore)); 
 };
 
 // POST /api/quality/analyze - Analyze English quality using Gemini
@@ -128,12 +124,10 @@ Please respond with ONLY a number between 0-100, nothing else.`;
                 fallback = true;
             }
         } else {
-            // Use basic analysis as fallback
             score = basicEnglishQualityAnalysis(storyText);
             fallback = true;
         }
 
-        // Generate encouraging message based on score
         if (score >= 85) {
             message = 'Exceptional writing!';
         } else if (score >= 71) {

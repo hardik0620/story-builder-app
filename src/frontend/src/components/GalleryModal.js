@@ -1,4 +1,4 @@
-// src/components/GalleryModal.js - Enhanced with Continue Functionality
+// src/components/GalleryModal.js 
 import React, { useState, useEffect } from 'react';
 
 const GalleryModal = ({ isOpen, onClose, onCreateNew, onContinueStory }) => {
@@ -6,29 +6,24 @@ const GalleryModal = ({ isOpen, onClose, onCreateNew, onContinueStory }) => {
 
     useEffect(() => {
         if (isOpen) {
-            // Load stories from localStorage
             const stories = JSON.parse(localStorage.getItem('savedStories') || '[]');
             setSavedStories(stories);
         }
     }, [isOpen]);
 
-    // ENHANCED: Continue story functionality
+    //Continue story functionality
     const continueStory = (storyId) => {
         const story = savedStories.find(s => s.id === storyId);
         if (story && story.fullStoryData) {
             console.log('📖 Loading story for continuation:', story.title);
 
-            // Prepare story data for continuation
             const storyDataForContinuation = {
                 ...story.fullStoryData,
-                // Ensure we have the latest timestamp
                 lastModified: new Date().toISOString()
             };
 
-            // Close gallery and load story
             onClose();
 
-            // Call the continue function passed from App.js
             if (typeof onContinueStory === 'function') {
                 onContinueStory(storyDataForContinuation);
             } else {
@@ -129,7 +124,6 @@ ${story.content}
                 `);
                 readingWindow.document.close();
             } else {
-                // Fallback for blocked popups
                 alert(storyDetails);
             }
         }
@@ -151,7 +145,6 @@ ${story.content}
                     alert('📋 Story shared! The text has been copied to your clipboard. You can paste it anywhere to share your creation!');
                 });
             } else {
-                // Fallback for older browsers
                 const textArea = document.createElement('textarea');
                 textArea.value = shareText;
                 document.body.appendChild(textArea);
@@ -216,7 +209,6 @@ ${story.content}
                                     </span>
                                 </div>
                                 <div className="story-actions">
-                                    {/* ENHANCED: Continue button with better UX */}
                                     <button
                                         className={`story-action-btn ${story.fullStoryData ? 'continue-available' : 'continue-disabled'}`}
                                         onClick={() => continueStory(story.id)}

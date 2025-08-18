@@ -958,7 +958,7 @@ body.nature-theme .ai-helper-integrated {
   background: linear-gradient(135deg, #00cec9, #55efc4);
 }
 
-/* Enhanced Propp Elements Grid */
+/* Propp Elements Grid */
 .propp-elements {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -1083,7 +1083,6 @@ body.dark-theme .propp-card {
   transition: all 0.3s ease;
 }
 
-/* When suggestions panel is hidden, make the editor take full width */
 .writing-workspace.suggestions-hidden {
   grid-template-columns: 1fr;
 }
@@ -1198,7 +1197,7 @@ body.dark-theme .propp-card {
   background: #0984e3;
 }
 
-/* Enhanced User Text and AI Text Styles */
+/* User Text and AI Text Styles */
 .user-text,
 .ai-text {
   background: rgba(116, 185, 255, 0.2);
@@ -1734,8 +1733,6 @@ body.dark-theme .propp-card {
   }
 }
 
-/* Enhanced Login Page Styles - Add to your App.css */
-
 /* Authentication Tabs */
 .auth-tabs {
   display: flex;
@@ -1771,7 +1768,7 @@ body.dark-theme .propp-card {
   color: #2d3436;
 }
 
-/* Enhanced Form Container */
+/* Form Container */
 .auth-form {
   width: 100%;
   max-width: 400px;
@@ -1843,7 +1840,7 @@ body.dark-theme .propp-card {
   transform: translateY(-50%) scale(1.1);
 }
 
-/* Enhanced Input Styles */
+/* Input Styles */
 .login-input.error {
   border-color: #ff6b6b;
   background: rgba(255, 107, 107, 0.1);
@@ -2037,7 +2034,7 @@ body.dark-theme .propp-card {
   }
 }
 
-/* Enhanced Button States */
+/* Button States */
 .login-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -2145,7 +2142,7 @@ body.dark-theme .propp-card {
   }
 }
 
-/* Enhanced Hover Effects */
+/* Hover Effects */
 .login-btn:hover:not(:disabled) {
   transform: translateY(-3px) scale(1.02);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
@@ -2165,7 +2162,7 @@ body.dark-theme .propp-card {
   outline-offset: 2px;
 }
 
-/* Enhanced Login Container */
+/* Login Container */
 .login-container {
   position: relative;
   overflow: hidden;
@@ -2195,7 +2192,7 @@ body.dark-theme .propp-card {
   }
 }
 
-/* Compact Navigation Tabs Styles - Add to App.css */
+/* Compact Navigation Tabs Styles */
 
 .navigation-tabs-container-compact {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -2416,7 +2413,6 @@ body.dark-theme .propp-card {
   }
 }
 
-/* Hide navigation tabs on welcome and login pages */
 .step-container.step-welcome .navigation-tabs-container-compact,
 .step-container.step-login .navigation-tabs-container-compact {
   display: none;

@@ -1,4 +1,4 @@
-// src/components/Step4Writing.js - Enhanced with Full Text Formatting
+// src/components/Step4Writing.js
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import apiService from '../services/api';
 
@@ -27,14 +27,12 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
     const storyContentRef = useRef(null);
     const userInputRef = useRef(null);
 
-    // Initialize storyParts if not exists
     useEffect(() => {
         if (!storyData.storyParts) {
             setStoryData(prev => ({ ...prev, storyParts: [] }));
         }
     }, [storyData.storyParts, setStoryData]);
 
-    // Initialize scene contents on mount
     useEffect(() => {
         if (storyData.elementOrder && storyData.elementOrder.length > 0) {
             const initialSceneContents = {};
@@ -45,7 +43,6 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
         }
     }, [storyData.elementOrder]);
 
-    // Cleanup timers on component unmount
     useEffect(() => {
         return () => {
             if (recoverTimer) clearTimeout(recoverTimer);
@@ -92,7 +89,7 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
         }
     };
 
-    // FIXED: Generate single AI suggestion
+    // Generate single AI suggestion
     const generateAISuggestion = async () => {
         if (!currentScene) return;
 
@@ -101,13 +98,11 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
         try {
             if (backendConnected) {
                 // Use Gemini for suggestions via backend
-                // Get all previous scenes' content
                 const previousScenesParts = (storyData.storyParts || [])
                     .filter(part => part.sceneIndex < currentSceneIndex)
                     .map(part => part.text)
                     .join('\n');
 
-                // Get current scene parts
                 const currentSceneParts = (storyData.storyParts || [])
                     .filter(part => part.sceneIndex === currentSceneIndex);
 
@@ -115,25 +110,23 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                     ? currentSceneParts.map(part => part.text).join(' ')
                     : `Starting the ${currentScene.name} part of the story`;
 
-                // Combine previous scenes with current scene for full context
                 const storyContext = previousScenesParts
                     ? `${previousScenesParts}\n\nCurrent scene: ${currentSceneText}`
                     : currentSceneText;
 
                 console.log('🤖 Requesting Gemini suggestion for scene:', currentScene.name);
 
-                // Pass model: 'gemini' to backend (your backend should route to Gemini if .env is set)
                 const response = await apiService.generateSuggestions(
                     {
                         id: currentScene.id,
                         name: currentScene.name,
                         description: currentScene.description,
-                        model: 'gemini' // Explicitly request Gemini
+                        model: 'gemini' 
                     },
                     currentSceneText,
                     storyData.theme,
                     userInput,
-                    previousScenesParts // Pass the full previous scenes content
+                    previousScenesParts 
                 );
 
                 if (response.success && response.suggestions && response.suggestions.length > 0) {
@@ -146,7 +139,6 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
                     console.log('✅ Got Gemini suggestion:', newSuggestion);
                 }
             } else {
-                // Fallback single suggestion
                 setTimeout(() => {
                     const sceneBasedSuggestion = getSingleSceneBasedSuggestion(currentScene, storyData.theme);
                     const newSuggestion = {
@@ -227,7 +219,6 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
         setSuggestions(prev => prev.filter(s => s.id !== suggestion.id));
     };
 
-    // ENHANCED TEXT FORMATTING FUNCTIONS
     const toggleBold = () => {
         setTextFormatting(prev => ({
             ...prev,
@@ -281,7 +272,6 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
         setCurrentFontSize(16);
     };
 
-    // Keep existing functions for delete, edit, recover, navigation, etc.
     const deleteStoryPart = (partId) => {
         const partToDelete = storyData.storyParts.find(p => p.id === partId);
         if (partToDelete && window.confirm("Are you sure you want to delete this part? You can recover it later.")) {
@@ -420,7 +410,6 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
     const userWordCount = (storyData.storyParts || []).filter(p => p.type === 'user').reduce((acc, part) => acc + part.text.split(' ').length, 0);
     const aiWordCount = wordCount - userWordCount;
 
-    // Get current scene parts
     const currentSceneParts = (storyData.storyParts || []).filter(part =>
         part.sceneIndex === currentSceneIndex
     );
@@ -563,9 +552,8 @@ const Step4Writing = ({ nextStep, previousStep, storyData, setStoryData, backend
             {/* Main Writing Interface */}
             <div className={`writing-workspace ${showSuggestions ? '' : 'suggestions-hidden'}`}>
                 <div className="story-editor">
-                    {/* ENHANCED TOOLBAR with all formatting options */}
+                    {/* TOOLBAR with all formatting options */}
                     <div className="editor-toolbar">
-                        {/* Text Formatting */}
                         <button
                             className="toolbar-btn"
                             onClick={toggleBold}

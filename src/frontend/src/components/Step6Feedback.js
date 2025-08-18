@@ -20,7 +20,6 @@ const Step6Feedback = ({ resetStory, storyData, currentUser, showGallery }) => {
         ];
 
         if (messages[stars]) {
-            // Could trigger a toast notification here
             console.log(messages[stars]);
         }
     };
@@ -42,11 +41,9 @@ const Step6Feedback = ({ resetStory, storyData, currentUser, showGallery }) => {
     };
 
     const viewGallery = () => {
-        // Use the showGallery function passed from parent or trigger custom event
         if (showGallery) {
             showGallery();
         } else {
-            // Fallback: trigger custom event that App.js listens for
             window.dispatchEvent(new CustomEvent('showGallery'));
         }
     };
@@ -65,7 +62,6 @@ const Step6Feedback = ({ resetStory, storyData, currentUser, showGallery }) => {
                 alert('Success message copied to clipboard! Share your achievement!');
             });
         } else {
-            // Fallback for older browsers
             const textArea = document.createElement('textarea');
             textArea.value = successText;
             document.body.appendChild(textArea);
@@ -81,7 +77,6 @@ const Step6Feedback = ({ resetStory, storyData, currentUser, showGallery }) => {
     };
 
     const submitFeedback = () => {
-        // Here you would typically send feedback to a server
         const feedbackData = {
             rating: rating,
             feedback: feedback,
@@ -96,7 +91,6 @@ const Step6Feedback = ({ resetStory, storyData, currentUser, showGallery }) => {
             timestamp: new Date().toISOString()
         };
 
-        // Save to localStorage as a demo (in real app, send to server)
         const existingFeedback = JSON.parse(localStorage.getItem('userFeedback') || '[]');
         existingFeedback.push(feedbackData);
         localStorage.setItem('userFeedback', JSON.stringify(existingFeedback));

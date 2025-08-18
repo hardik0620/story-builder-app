@@ -1,13 +1,11 @@
 // backend/config/api.js
 const OpenAI = require('openai');
 
-// Initialize OpenAI client
 let openaiClient = null;
 
 if (process.env.GOOGLE_GEMINI_API_KEY) {
     // Initialize Gemini client here if you have a Gemini SDK
     // Example: geminiClient = new Gemini({ apiKey: process.env.GOOGLE_GEMINI_API_KEY });
-    // For now, just store the API key
     openaiClient = { apiKey: process.env.GOOGLE_GEMINI_API_KEY };
 } else {
     console.warn('⚠️  Google Gemini API key not found. AI features will not work.');
@@ -36,12 +34,12 @@ const API_CONFIG = {
     },
     rateLimits: {
         ai: {
-            windowMs: 15 * 60 * 1000, // 15 minutes
-            max: 50 // 50 requests per window
+            windowMs: 15 * 60 * 1000, 
+            max: 50 
         },
         general: {
-            windowMs: 15 * 60 * 1000, // 15 minutes
-            max: 100 // 100 requests per window
+            windowMs: 15 * 60 * 1000, 
+            max: 100 
         }
     },
     validation: {
@@ -52,12 +50,10 @@ const API_CONFIG = {
     }
 };
 
-// Helper function to check if OpenAI is available
 const isOpenAIAvailable = () => {
     return openaiClient !== null;
 };
 
-// Helper function to get OpenAI client
 const getOpenAIClient = () => {
     if (!openaiClient) {
         throw new Error('OpenAI client not initialized. Please check your API key.');

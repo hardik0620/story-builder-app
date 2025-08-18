@@ -1,4 +1,4 @@
-// src/components/AIWizard.js - Complete Fixed Version
+// src/components/AIWizard.js 
 import React, { useState, useRef, useEffect } from 'react';
 import apiService from '../services/api';
 
@@ -41,7 +41,6 @@ const AIWizard = ({ currentStep, storyData, backendConnected }) => {
 
         try {
             if (backendConnected) {
-                // FIXED: Use real API call instead of always falling back
                 console.log('🧙‍♂️ Your AI buddy is thinking...', userMessage.text);
 
                 const response = await apiService.chatWithWizard(
@@ -62,7 +61,6 @@ const AIWizard = ({ currentStep, storyData, backendConnected }) => {
                     throw new Error(response.error || 'No response from AI');
                 }
             } else {
-                // Only use fallback when backend is NOT connected
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 const fallbackResponse = getContextualFallbackResponse(userMessage.text);
 
@@ -76,7 +74,6 @@ const AIWizard = ({ currentStep, storyData, backendConnected }) => {
         } catch (error) {
             console.error('AI Wizard Error:', error);
 
-            // Provide helpful fallback even on error
             const fallbackResponse = getContextualFallbackResponse(userMessage.text);
             const aiResponse = {
                 id: Date.now() + 1,
@@ -89,11 +86,10 @@ const AIWizard = ({ currentStep, storyData, backendConnected }) => {
         }
     };
 
-    // IMPROVED fallback function
+    //fallback function
     const getContextualFallbackResponse = (userMessage) => {
         const lowerMessage = userMessage.toLowerCase();
 
-        // Context-aware responses based on current step
         if (currentStep === 1 && (lowerMessage.includes('theme') || lowerMessage.includes('title'))) {
             return "For theme selection, pick what excites you most! Fantasy gives you magic and dragons 🐉, Adventure offers exciting quests 🗺️, Mystery lets you solve puzzles 🔍. Your title should hint at the adventure ahead! What kind of world draws you in?";
         }
@@ -106,7 +102,6 @@ const AIWizard = ({ currentStep, storyData, backendConnected }) => {
             return `You're in the writing phase! ✍️ For the ${storyData.theme || 'adventure'} theme, start by describing what your hero sees, feels, or discovers. Don't worry about perfection - just let your imagination flow! What happens next in your story?`;
         }
 
-        // General story help
         if (lowerMessage.includes('story') || lowerMessage.includes('write')) {
             return "Every great story needs three things: a hero we care about, a problem to solve, and an adventure to get there! 📚 Focus on what makes your hero special and what challenge they'll face. What's your story about?";
         }
@@ -115,7 +110,6 @@ const AIWizard = ({ currentStep, storyData, backendConnected }) => {
             return "I'm here to help! 🌟 Try asking about: story themes, Propp's functions, character ideas, or writing techniques. What specific part of storytelling would you like to explore?";
         }
 
-        // Default encouraging response
         return "That's a great question about storytelling! 🎭 I love helping with creative adventures. Whether it's about plot, characters, or writing techniques, I'm here to guide you. What aspect of your story can we work on together?";
     };
 

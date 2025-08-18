@@ -1,4 +1,4 @@
-// src/components/Step1Theme.js (Debug Version)
+// src/components/Step1Theme.js
 import React, { useEffect } from 'react';
 import apiService from '../services/api';
 
@@ -10,12 +10,10 @@ const Step1Theme = ({ nextStep, previousStep, storyData, setStoryData }) => {
         setStoryData: typeof setStoryData
     });
 
-    // Debug effect to track when component mounts
     useEffect(() => {
         console.log('🎭 Step1Theme mounted successfully');
         console.log('📊 Current story data:', storyData);
 
-        // Check if required functions are available
         if (typeof nextStep !== 'function') {
             console.error('❌ nextStep is not a function in Step1Theme');
         }

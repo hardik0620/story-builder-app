@@ -293,7 +293,7 @@ router.get('/propp-functions', (req, res) => {
     });
 });
 
-// Save story (for future database integration)
+// Save story
 router.post('/save', [
     body('title')
         .isString()
@@ -314,10 +314,9 @@ router.post('/save', [
         .isArray()
         .withMessage('Propp elements must be an array'),
 ], handleValidationErrors, (req, res) => {
-    // For now, just return success (later connect to database)
     const { title, content, theme, proppElements } = req.body;
 
-    const storyId = Date.now().toString(); // Simple ID generation
+    const storyId = Date.now().toString(); 
 
     res.json({
         success: true,
@@ -334,7 +333,7 @@ router.post('/save', [
     });
 });
 
-// Get story themes - UPDATED to match frontend exactly
+// Get story themes
 router.get('/themes', (req, res) => {
     const themes = [
         { id: 'fantasy', name: 'Fantasy Kingdom', emoji: '🏰', description: 'Magic, mythical creatures, and enchanted kingdoms' },

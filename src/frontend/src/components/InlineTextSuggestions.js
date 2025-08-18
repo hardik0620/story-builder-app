@@ -1,4 +1,4 @@
-// src/components/InlineTextSuggestions.js - Gmail-style inline suggestions
+// src/components/InlineTextSuggestions.js
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import apiService from '../services/api';
 
@@ -20,7 +20,6 @@ const InlineTextSuggestions = ({
     const suggestionTimeoutRef = useRef(null);
     const lastRequestRef = useRef(null);
 
-    // Debounced suggestion generation
     const generateInlineSuggestion = useCallback(async (text, cursorPosition) => {
         if (!text || text.length < 10 || disabled) {
             setSuggestion('');
@@ -28,22 +27,18 @@ const InlineTextSuggestions = ({
             return;
         }
 
-        // Get the text before cursor position
         const textBeforeCursor = text.substring(0, cursorPosition);
         const words = textBeforeCursor.trim().split(/\s+/);
 
-        // Only suggest after meaningful content (at least 3 words)
         if (words.length < 3) {
             setSuggestion('');
             setShowSuggestion(false);
             return;
         }
 
-        // Get last sentence or phrase
         const sentences = textBeforeCursor.split(/[.!?]+/);
         const currentSentence = sentences[sentences.length - 1].trim();
 
-        // Don't suggest if sentence is already long
         if (currentSentence.length > 100) {
             setSuggestion('');
             setShowSuggestion(false);
@@ -51,7 +46,6 @@ const InlineTextSuggestions = ({
         }
 
         try {
-            // Cancel previous request
             if (lastRequestRef.current) {
                 lastRequestRef.current = null;
             }
@@ -68,7 +62,6 @@ const InlineTextSuggestions = ({
                 currentScene: currentScene?.name || ''
             });
 
-            // Check if this is still the latest request
             if (lastRequestRef.current !== requestId) {
                 return;
             }
@@ -76,7 +69,6 @@ const InlineTextSuggestions = ({
             if (response.success && response.suggestion && response.suggestion.trim()) {
                 const cleanSuggestion = response.suggestion.trim();
 
-                // Make sure suggestion doesn't repeat existing text
                 if (!textBeforeCursor.toLowerCase().includes(cleanSuggestion.toLowerCase().substring(0, 10))) {
                     setSuggestion(cleanSuggestion);
                     setShowSuggestion(true);
@@ -95,30 +87,25 @@ const InlineTextSuggestions = ({
         }
     }, [disabled, storyContext, storyTheme, currentScene]);
 
-    // Handle text changes with debouncing
     const handleTextChange = (e) => {
         const newValue = e.target.value;
         const cursorPosition = e.target.selectionStart;
 
-        setStorySoFar(newValue); // Update the full story context
+        setStorySoFar(newValue); 
 
         onChange(e);
 
-        // Clear existing timeout
         if (suggestionTimeoutRef.current) {
             clearTimeout(suggestionTimeoutRef.current);
         }
 
-        // Hide suggestion immediately when typing
         setShowSuggestion(false);
 
-        // Set new timeout for suggestion generation
         suggestionTimeoutRef.current = setTimeout(() => {
             generateInlineSuggestion(newValue, cursorPosition);
-        }, 800); // Wait 800ms after user stops typing
+        }, 800); 
     };
 
-    // Handle key events
     const handleKeyDown = (e) => {
         if (showSuggestion && suggestion) {
             if (e.key === 'Tab' || (e.key === 'ArrowRight' && e.ctrlKey)) {
@@ -132,17 +119,14 @@ const InlineTextSuggestions = ({
         }
     };
 
-    // Accept suggestion
     const acceptSuggestion = () => {
         if (suggestion && textareaRef.current) {
             const textarea = textareaRef.current;
             const currentValue = textarea.value;
             const cursorPosition = textarea.selectionStart;
 
-            // Add suggestion to current text
             const newValue = currentValue.substring(0, cursorPosition) + suggestion + currentValue.substring(cursorPosition);
 
-            // Create synthetic event
             const syntheticEvent = {
                 target: {
                     value: newValue,
@@ -160,7 +144,6 @@ const InlineTextSuggestions = ({
             setSuggestion('');
             setShowSuggestion(false);
 
-            // Focus and set cursor position
             setTimeout(() => {
                 textarea.focus();
                 textarea.setSelectionRange(cursorPosition + suggestion.length, cursorPosition + suggestion.length);
@@ -168,7 +151,6 @@ const InlineTextSuggestions = ({
         }
     };
 
-    // Cleanup on unmount
     useEffect(() => {
         return () => {
             if (suggestionTimeoutRef.current) {
@@ -177,7 +159,6 @@ const InlineTextSuggestions = ({
         };
     }, []);
 
-    // Calculate suggestion display position
     const getSuggestionStyle = () => {
         if (!textareaRef.current || !showSuggestion) return {};
 

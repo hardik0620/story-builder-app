@@ -1,4 +1,4 @@
-// src/App.js - Updated with Compact Navigation
+// src/App.js 
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
@@ -7,9 +7,7 @@ import Header from './components/Header';
 import AIWizard from './components/AIWizard';
 import DemoModal from './components/DemoModal';
 import GalleryModal from './components/GalleryModal';
-import NavigationTabs from './components/NavigationTabs'; // Uses the new compact version
-
-// Import Step Components
+import NavigationTabs from './components/NavigationTabs'; 
 import LoginPage from './components/LoginPage';
 import Step0Welcome from './components/Step0Welcome';
 import Step1Theme from './components/Step1Theme';
@@ -19,10 +17,8 @@ import Step4Writing from './components/Step4Writing';
 import Step5Review from './components/Step5Review';
 import Step6Feedback from './components/Step6Feedback';
 
-// Import API Test Component (temporary)
 import ApiTest from './components/ApiTest';
 
-// Import API service
 import apiService from './services/api';
 
 function App() {
@@ -51,15 +47,12 @@ function App() {
     email: null
   });
 
-  // Accessibility states
   const [isBigText, setIsBigText] = useState(false);
   const [contrast, setContrast] = useState(100);
 
-  // Backend connection state
   const [backendConnected, setBackendConnected] = useState(false);
   const [showApiTest, setShowApiTest] = useState(false);
 
-  // Test backend connection on app load
   useEffect(() => {
     testBackendConnection();
   }, []);
@@ -77,19 +70,15 @@ function App() {
 
   // Load saved progress and settings on mount
   useEffect(() => {
-    // Load saved theme
     const savedTheme = localStorage.getItem('selectedTheme');
     if (savedTheme && savedTheme !== 'default') {
       document.body.classList.add(savedTheme + '-theme');
     }
-
-    // Load saved progress
     const savedProgress = localStorage.getItem('storyProgress');
     const progress = JSON.parse(savedProgress);
     if (savedProgress && progress.storyData && progress.storyData.title) {
       try {
         if (progress.storyData && window.confirm("Would you like to continue your previous story?")) {
-          // Use functional updates to avoid dependency warnings
           setStoryData(() => progress.storyData);
           setCurrentStep(() => progress.currentStep || 4);
 
@@ -102,7 +91,6 @@ function App() {
       }
     }
 
-    // Load accessibility settings
     const savedBigText = localStorage.getItem('bigTextEnabled') === 'true';
     const savedContrast = parseInt(localStorage.getItem('contrastLevel') || '100');
     setIsBigText(() => savedBigText);
@@ -113,7 +101,6 @@ function App() {
     }
     document.body.style.filter = `contrast(${savedContrast}%)`;
 
-    // Listen for gallery show event
     const handleShowGallery = () => {
       setGalleryModalOpen(true);
     };
@@ -122,9 +109,8 @@ function App() {
     return () => {
       window.removeEventListener('showGallery', handleShowGallery);
     };
-  }, []); // Empty dependency array ensures single execution
+  }, []); 
 
-  // Save settings when they change
   useEffect(() => {
     localStorage.setItem('bigTextEnabled', isBigText.toString());
     document.body.style.fontSize = isBigText ? '1.3em' : '';
@@ -191,41 +177,37 @@ function App() {
     setGalleryModalOpen(false);
   };
 
-  // Continue story functionality
   const handleContinueStory = (storyDataToLoad) => {
     console.log('📖 Loading story for continuation:', storyDataToLoad);
 
-    // Confirm before loading if there's current unsaved work
     if (storyData.storyParts && storyData.storyParts.length > 0) {
       if (!window.confirm('⚠️ You have unsaved work in your current story. Loading another story will replace it. Continue?')) {
         return;
       }
     }
 
-    // Load the story data
     setStoryData({
       ...storyDataToLoad,
       lastModified: new Date().toISOString()
     });
 
     // Determine which step to go to based on story progress
-    let targetStep = 4; // Default to writing step
+    let targetStep = 4; 
 
     if (!storyDataToLoad.title || !storyDataToLoad.theme) {
-      targetStep = 1; // Go to theme selection
+      targetStep = 1; 
     } else if (!storyDataToLoad.selectedElements || storyDataToLoad.selectedElements.length < 3) {
-      targetStep = 2; // Go to elements selection
+      targetStep = 2; 
     } else if (!storyDataToLoad.elementOrder || storyDataToLoad.elementOrder.length === 0) {
-      targetStep = 3; // Go to sequencing
+      targetStep = 3; 
     } else if (!storyDataToLoad.storyParts || storyDataToLoad.storyParts.length === 0) {
-      targetStep = 4; // Go to writing
+      targetStep = 4; 
     } else {
-      targetStep = 4; // Continue writing
+      targetStep = 4; 
     }
 
     setCurrentStep(targetStep);
 
-    // Save the loaded progress
     const progressData = {
       currentStep: targetStep,
       storyData: storyDataToLoad,
@@ -237,24 +219,19 @@ function App() {
     alert(`📖 Story "${storyDataToLoad.title}" loaded successfully! You can continue writing where you left off.`);
   };
 
-  // Enhanced step change handler for navigation tabs
   const handleStepChange = (targetStep) => {
     console.log(`🧭 Navigation request: Step ${currentStep} → Step ${targetStep}`);
 
-    // Validate the step change is allowed
     if (targetStep < 0 || targetStep > 6) {
       console.warn('Invalid step requested:', targetStep);
       return;
     }
 
-    // Check if step is accessible
     if (!isStepAccessible(targetStep)) {
       const stepNames = ['Welcome', 'Theme', 'Elements', 'Order', 'Write', 'Review', 'Complete'];
       alert(`🔒 "${stepNames[targetStep]}" step is not yet accessible. Please complete the previous steps first!`);
       return;
     }
-
-    // Save current progress before navigating
     const progressData = {
       currentStep: targetStep,
       storyData: storyData,
@@ -262,7 +239,6 @@ function App() {
     };
     localStorage.setItem('storyProgress', JSON.stringify(progressData));
 
-    // Navigate to the new step
     setCurrentStep(targetStep);
     console.log(`📍 Navigated to step ${targetStep}`);
   };
@@ -271,26 +247,25 @@ function App() {
   const isStepAccessible = (stepId) => {
     switch (stepId) {
       case 0:
-        return true; // Welcome is always accessible
+        return true; 
       case 1:
-        return true; // Theme selection is always accessible after welcome
+        return true; 
       case 2:
-        return storyData.theme && storyData.title; // Need theme and title
+        return storyData.theme && storyData.title; 
       case 3:
-        return storyData.selectedElements && storyData.selectedElements.length >= 3; // Need at least 3 elements
+        return storyData.selectedElements && storyData.selectedElements.length >= 3; 
       case 4:
-        return storyData.elementOrder && storyData.elementOrder.length >= 3; // Need ordered elements
+        return storyData.elementOrder && storyData.elementOrder.length >= 3; 
       case 5:
-        return storyData.storyParts && storyData.storyParts.length > 0; // Need some story content
+        return storyData.storyParts && storyData.storyParts.length > 0; 
       case 6:
-        return storyData.storyParts && storyData.storyParts.length > 0; // Same as review
+        return storyData.storyParts && storyData.storyParts.length > 0; 
       default:
         return false;
     }
   };
 
   const nextStep = () => {
-    // Special handling for step transitions
     if (currentStep === 2) {
       setStoryData(prev => ({
         ...prev,
@@ -337,7 +312,6 @@ function App() {
     setDemoModalOpen(false);
   };
 
-  // Save story function for Step5Review
   const saveStoryToGallery = (storyTitle, storyContent, fullStoryData) => {
     const storyToSave = {
       id: Date.now(),
@@ -350,7 +324,7 @@ function App() {
       wordCount: storyContent.split(' ').filter(word => word.trim()).length,
       userContribution: 85, // Placeholder
       author: currentUser.name || 'Story Creator',
-      fullStoryData: fullStoryData || storyData // Include full story data for continuation
+      fullStoryData: fullStoryData || storyData 
     };
 
     const savedStories = JSON.parse(localStorage.getItem('savedStories') || '[]');
@@ -444,12 +418,10 @@ function App() {
 
   return (
     <div style={globalStyles}>
-      {/* Demo Modal */}
       {isDemoModalOpen && (
         <DemoModal closeModal={closeDemoModal} />
       )}
 
-      {/* Gallery Modal with continue functionality */}
       <GalleryModal
         isOpen={isGalleryModalOpen}
         onClose={closeGallery}
@@ -457,7 +429,6 @@ function App() {
         onContinueStory={handleContinueStory}
       />
 
-      {/* Render login page or main app */}
       {currentStep === -1 ? (
         renderStep()
       ) : (
@@ -545,7 +516,7 @@ function App() {
                 backendConnected={backendConnected}
               />
 
-              {/* Compact Navigation Tabs (hidden on welcome step) */}
+              {/* Compact Navigation Tabs */}
               {currentStep > 0 && (
                 <NavigationTabs
                   currentStep={currentStep}
@@ -555,7 +526,6 @@ function App() {
                 />
               )}
 
-              {/* Current Step Content */}
               {renderStep()}
             </div>
           </div>

@@ -1,4 +1,4 @@
-// src/services/api.js - Enhanced for Better AI Integration
+// src/services/api.js 
 const API_BASE_URL = process.env.REACT_APP_API_URL + "/api" || 'http://localhost:5002/api';
 
 class ApiService {
@@ -6,7 +6,6 @@ class ApiService {
         this.requestId = 0;
     }
 
-    // Helper function to provide context hints for scenes
     getSceneContextHint(sceneId) {
         const hints = {
             0: "This is where we meet the hero and learn about their normal life before the adventure",
@@ -52,16 +51,14 @@ class ApiService {
         }
     }
 
-    // Health check
     async checkHealth() {
         return this.makeRequest('/healthCheck', {
             method: 'POST'
         });
     }
 
-    // ENHANCED: AI Chat with Story Wizard with better context
+    // AI Chat with Story Wizard with better context
     async chatWithWizard(message, currentStep = 0, storyData = {}) {
-        // Add more context to help AI understand better
         const enhancedStoryData = {
             ...storyData,
             currentSceneName: storyData.elementOrder?.[0]?.name || 'Beginning',
@@ -96,14 +93,13 @@ class ApiService {
 
     // Generate suggestion with complete story context
     async generateSuggestions(currentScene, currentSceneContent = '', storyTheme = '', userInput = '', previousScenes = '') {
-        // Enhanced context with full story history
         const enhancedContext = {
             currentScene: {
                 ...currentScene,
                 contextHint: this.getSceneContextHint(currentScene.id)
             },
-            previousScenes,         // Complete content of all previous scenes
-            currentSceneContent,    // Current scene's content
+            previousScenes,         
+            currentSceneContent,    
             storyTheme,
             storySoFar: userInput,
             requestType: 'single_suggestion',
@@ -116,7 +112,6 @@ class ApiService {
         });
     }
 
-    // Complete story with better context
     async completeStory(storyParts, targetLength = 500) {
         const enhancedRequest = {
             storyParts: storyParts.map(part => ({
@@ -150,7 +145,6 @@ class ApiService {
         });
     }
 
-    // Explain Propp function with context
     async explainProppFunction(functionId, context = '') {
         return this.makeRequest('/ai/explain-function', {
             method: 'POST',
@@ -162,12 +156,10 @@ class ApiService {
         });
     }
 
-    // Get Propp functions
     async getProppFunctions() {
         return this.makeRequest('/stories/propp-functions');
     }
 
-    // Get story themes
     async getStoryThemes() {
         return this.makeRequest('/stories/themes');
     }
@@ -184,7 +176,6 @@ class ApiService {
         });
     }
 
-    // Save story with enhanced metadata
     async saveStory(title, content, theme = '', proppElements = [], additionalData = {}) {
         const enhancedStoryData = {
             title,
@@ -202,12 +193,10 @@ class ApiService {
         });
     }
 
-    // Get user profile
     async getUserProfile() {
         return this.makeRequest('/users/profile');
     }
 
-    // Update user preferences
     async updateUserPreferences(preferences) {
         return this.makeRequest('/users/preferences', {
             method: 'PUT',
@@ -215,12 +204,10 @@ class ApiService {
         });
     }
 
-    // Get user statistics
     async getUserStats() {
         return this.makeRequest('/users/stats');
     }
 
-    // Test AI endpoint
     async testAI() {
         return this.makeRequest('/ai/test');
     }
@@ -244,12 +231,9 @@ class ApiService {
                 lastError = error;
                 console.warn(`🔄 API Request attempt ${attempt}/${maxRetries} failed:`, error.message);
 
-                // Don't retry on client errors (4xx) except for 429 (rate limit)
                 if (error.message.includes('HTTP 4') && !error.message.includes('HTTP 429')) {
                     break;
                 }
-
-                // Wait before retrying (exponential backoff)
                 if (attempt < maxRetries) {
                     const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
                     console.log(`⏳ Waiting ${delay}ms before retry...`);
@@ -261,7 +245,7 @@ class ApiService {
         throw lastError;
     }
 
-    // NEW: Contextual story assistance
+    // Contextual story assistance
     async getContextualHelp(userMessage, storyData, currentScene) {
         const helpRequest = {
             userMessage,
@@ -288,7 +272,7 @@ class ApiService {
         });
     }
 
-    // NEW: Smart suggestion generation with learning
+    // Smart suggestion generation with learning
     async getSmartSuggestion(context) {
         const smartRequest = {
             ...context,
@@ -303,7 +287,6 @@ class ApiService {
         });
     }
 
-    // Connection quality check
     async checkConnectionQuality() {
         const startTime = Date.now();
         try {
@@ -325,13 +308,11 @@ class ApiService {
         }
     }
 
-    // Clear any cache if needed
     clearCache() {
         console.log('🧹 API cache cleared');
         this.requestId = 0;
     }
 
-    // Diagnostic information
     getDiagnostics() {
         return {
             apiBaseUrl: API_BASE_URL,
@@ -342,12 +323,10 @@ class ApiService {
     }
 }
 
-// Create singleton instance
 const apiService = new ApiService();
 
 export default apiService;
 
-// Named exports for specific functions
 export const {
     checkHealth,
     chatWithWizard,

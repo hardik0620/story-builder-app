@@ -1,4 +1,4 @@
-// backend/controllers/aiController.js - Enhanced with Knowledge Database
+// backend/controllers/aiController.js 
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { PROPP_KNOWLEDGE_DATABASE, PROPP_HELPER_FUNCTIONS } = require('../data/proppKnowledgeDatabase');
 const fetch = require('node-fetch');
@@ -37,7 +37,7 @@ if (process.env.GOOGLE_GEMINI_API_KEY) {
     console.warn('⚠️  Google Gemini API key not found. Using knowledge database fallback.');
 }
 
-// ENHANCED: AI Chat Handler with Gemini Integration
+// AI Chat Handler with Gemini Integration
 exports.handleChat = async (req, res) => {
     try {
         const { message, currentStep = 0, storyData = {} } = req.body;
@@ -170,7 +170,6 @@ exports.handleChat = async (req, res) => {
 
 // Helper function to generate story context from storyData
 function generateStoryContext(storyData) {
-    // Safely handle elementsUsed - ensure it's an array
     const elementsUsed = Array.isArray(storyData.elementsUsed) ? storyData.elementsUsed.join(', ') : 'None';
 
     return `Title: ${storyData.title || 'Untitled Story'}
@@ -198,7 +197,7 @@ Time Spent: ${progress.timeSpent} minutes
 AI Suggestions Used: ${storyData.aiSuggestionsUsed || 0}`
 };
 
-// FIXED: Generate single contextual suggestion
+// Generate single contextual suggestion
 exports.generateSuggestions = async (req, res) => {
     try {
         const { currentScene, currentSceneContent, storyTheme, storySoFar, previousScenes } = req.body;
@@ -280,22 +279,20 @@ Respond with exactly one suggestion, or, if you think that the contents of the s
 
 // Helper Functions
 function getCurrentSceneId(storyData, currentStep) {
-    // Try to get from current writing context
     if (storyData.elementOrder && storyData.elementOrder.length > 0) {
-        // Find the scene user is currently working on
         const currentSceneIndex = getCurrentSceneIndex(storyData);
         return storyData.elementOrder[currentSceneIndex]?.id || 0;
     }
 
     // Fallback based on step
     const stepToSceneMap = {
-        0: 0,  // Welcome -> Initial
-        1: 0,  // Theme -> Initial  
-        2: 0,  // Elements -> Initial
-        3: 0,  // Sequencing -> Initial
-        4: 0,  // Writing -> depends on current scene
-        5: 31, // Review -> Reward
-        6: 31  // Feedback -> Reward
+        0: 0,  
+        1: 0,  
+        2: 0, 
+        3: 0,  
+        4: 0,  
+        5: 31, 
+        6: 31  
     };
 
     return stepToSceneMap[currentStep] || 0;
@@ -306,19 +303,16 @@ function getCurrentSceneIndex(storyData) {
         return 0;
     }
 
-    // Find the scene with the most recent writing
     const sceneCounts = {};
     storyData.storyParts.forEach(part => {
         sceneCounts[part.sceneIndex] = (sceneCounts[part.sceneIndex] || 0) + 1;
     });
 
-    // Return the scene being worked on most recently
     const sceneIndices = Object.keys(sceneCounts).map(Number).sort((a, b) => b - a);
     return sceneIndices[0] || 0;
 }
 
 function shouldUseAI(message) {
-    // Use AI for complex questions, specific writing help, or detailed queries
     const complexIndicators = [
         'how do i', 'what should', 'can you help', 'i need', 'stuck',
         'not sure', 'what happens', 'character', 'plot', 'story'
@@ -366,12 +360,10 @@ function getKnowledgeBaseSuggestion(sceneData, storyTheme) {
         return `Continue your ${storyTheme || 'adventure'} story by showing what your hero does next!`;
     }
 
-    // Get a random response from the scene's available responses
     const randomIndex = Math.floor(Math.random() * sceneData.responses.length);
     return sceneData.responses[randomIndex];
 }
 
-// Keep existing functions for title generation, story completion, etc.
 exports.generateTitle = async (req, res) => {
     try {
         const { theme, selectedElements } = req.body;
@@ -490,7 +482,6 @@ Write only the completion text:`;
             });
         }
 
-        // Fallback completion
         const safeCompletion = "Through their courage, kindness, and friendship, they discovered that the greatest adventures come from helping others and working together. They learned valuable lessons and lived happily, ready for whatever wonderful adventure might come next! 🌟";
 
         res.json({
@@ -691,12 +682,10 @@ exports.healthCheck = (req, res) => {
 };
 
 console.log('✅ Enhanced AI Controller loaded with comprehensive knowledge database');
-// Note: Ensure to handle the case where Google Gemini is not initialized
 if (!genAI) {
     console.warn('⚠️ Google Gemini not initialized. Some AI features will be limited to knowledge database responses.');
 }
 // This allows the application to run without Gemini while still providing useful responses from the knowledge database.
-// This file is now ready to be used in the backend with enhanced AI capabilities and a comprehensive knowledge database.
 exports.analyzeEnglishQuality = async (storyText) => {
     try {
         console.log('🎯 Analyzing English quality for story...');
@@ -729,7 +718,6 @@ Please respond with ONLY a number between 0-100, nothing else.`;
             const result = await geminiModel.generateContent(prompt);
             response = result.response.text();
         } else {
-            // Use basic analysis as fallback
             return {
                 success: true,
                 score: basicEnglishQualityAnalysis(storyText),
@@ -741,7 +729,7 @@ Please respond with ONLY a number between 0-100, nothing else.`;
 
         // Extract just the number from the response
         const scoreMatch = response.match(/\b(\d{1,3})\b/);
-        const score = scoreMatch ? Math.min(100, Math.max(0, parseInt(scoreMatch[1]))) : 75; // Default to 75 if parsing fails
+        const score = scoreMatch ? Math.min(100, Math.max(0, parseInt(scoreMatch[1]))) : 75; 
 
         console.log(`✅ English quality analysis complete. Score: ${score}/100`);
 
@@ -777,25 +765,20 @@ const basicEnglishQualityAnalysis = (text) => {
     const sentences = text.split(/[.!?]+/).filter(Boolean);
     const words = text.split(/\s+/).filter(Boolean);
 
-    if (words.length === 0) return 30; // Minimum encouraging score
-
-    // Average sentence length (ideal is between 10-15 for young writers)
+    if (words.length === 0) return 30; 
     const avgSentenceLength = words.length / Math.max(sentences.length, 1);
     const sentenceLengthScore = Math.min(100, 100 - Math.abs(12.5 - avgSentenceLength) * 3);
 
-    // Vocabulary diversity (unique words ratio)
     const uniqueWords = new Set(words.map(w => w.toLowerCase().replace(/[^]/g, '')));
     const vocabularyScore = Math.min(100, (uniqueWords.size / words.length) * 150);
 
-    // Story length bonus (encourage longer stories)
     const lengthBonus = Math.min(20, words.length / 50);
 
-    // Final score (weighted average with bonuses)
     const finalScore = Math.round(
-        (sentenceLengthScore * 0.3 + vocabularyScore * 0.5 + lengthBonus + 20) // +20 base encouragement score
+        (sentenceLengthScore * 0.3 + vocabularyScore * 0.5 + lengthBonus + 20) 
     );
 
-    return Math.min(100, Math.max(30, finalScore)); // Minimum 30 to be encouraging
+    return Math.min(100, Math.max(30, finalScore)); 
 };
 
 module.exports = {
@@ -808,5 +791,3 @@ module.exports = {
     healthCheck: exports.healthCheck,
     analyzeEnglishQuality: exports.analyzeEnglishQuality
 };
-// Ensure to export all functions for use in routes
-// This file is now ready to be used in the backend with enhanced AI capabilities and a comprehensive knowledge database.

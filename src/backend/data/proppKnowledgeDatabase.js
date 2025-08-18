@@ -1,6 +1,5 @@
 // backend/data/proppKnowledgeDatabase.js - Comprehensive Knowledge Base
 const PROPP_KNOWLEDGE_DATABASE = {
-    // Function 0: Initial Situation
     0: {
         name: "Initial Situation",
         shortName: "Initial",
@@ -37,7 +36,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 1: Absence
     1: {
         name: "Absence",
         shortName: "Absence",
@@ -74,7 +72,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 2: Interdiction
     2: {
         name: "Interdiction",
         shortName: "Interdiction",
@@ -111,7 +108,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 3: Violation
     3: {
         name: "Violation",
         shortName: "Violation",
@@ -148,7 +144,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 4: Reconnaissance  
     4: {
         name: "Reconnaissance",
         shortName: "Reconnaissance",
@@ -185,7 +180,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 5: Delivery
     5: {
         name: "Delivery",
         shortName: "Delivery",
@@ -222,7 +216,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 6: Trickery
     6: {
         name: "Trickery",
         shortName: "Trickery",
@@ -259,7 +252,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 7: Complicity
     7: {
         name: "Complicity",
         shortName: "Complicity",
@@ -296,7 +288,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 8: Villainy
     8: {
         name: "Villainy",
         shortName: "Villainy",
@@ -333,7 +324,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 8.1: Lack
     "8.1": {
         name: "Lack",
         shortName: "Lack",
@@ -370,7 +360,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 9: Mediation
     9: {
         name: "Mediation",
         shortName: "Mediation",
@@ -407,7 +396,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 10: Counteraction
     10: {
         name: "Counteraction",
         shortName: "Counteraction",
@@ -444,7 +432,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 11: Departure
     11: {
         name: "Departure",
         shortName: "Departure",
@@ -481,7 +468,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 12: Test
     12: {
         name: "Test",
         shortName: "Test",
@@ -518,7 +504,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 13: Reaction
     13: {
         name: "Reaction",
         shortName: "Reaction",
@@ -556,7 +541,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 14: Receipt
     14: {
         name: "Receipt",
         shortName: "Receipt",
@@ -593,7 +577,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 15: Arrival
     15: {
         name: "Arrival",
         shortName: "Arrival",
@@ -629,7 +612,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 16: Struggle
     16: {
         name: "Struggle",
         shortName: "Struggle",
@@ -665,7 +647,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 17: Branding
     17: {
         name: "Branding",
         shortName: "Branding",
@@ -701,7 +682,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 18: Victory
     18: {
         name: "Victory",
         shortName: "Victory",
@@ -737,7 +717,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 19: Liquidation
     19: {
         name: "Liquidation",
         shortName: "Liquidation",
@@ -773,7 +752,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 20: Return
     20: {
         name: "Return",
         shortName: "Return",
@@ -809,7 +787,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 21: Pursuit
     21: {
         name: "Pursuit",
         shortName: "Pursuit",
@@ -845,7 +822,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 22: Escape
     22: {
         name: "Escape",
         shortName: "Escape",
@@ -881,7 +857,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 23: Unrecognised Arrival
     23: {
         name: "Unrecognised Arrival",
         shortName: "Unrecognised",
@@ -917,7 +892,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 24: Unfounded Claims
     24: {
         name: "Unfounded Claims",
         shortName: "False Claims",
@@ -953,7 +927,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 25: Difficult Task
     25: {
         name: "Difficult Task",
         shortName: "Task",
@@ -989,7 +962,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 26: Solution
     26: {
         name: "Solution",
         shortName: "Solution",
@@ -1025,7 +997,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 27: Recognition
     27: {
         name: "Recognition",
         shortName: "Recognition",
@@ -1061,7 +1032,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
         ]
     },
 
-    // Function 28: Exposure
     28: {
         name: "Exposure",
         shortName: "Exposure",
@@ -1096,7 +1066,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
             "Justice and truth always win over deception and lies"
         ]
     },
-    // Function 29: Transfiguration
     29: {
         name: "Transfiguration",
         shortName: "Transfiguration",
@@ -1131,7 +1100,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
             "Show how the hero's identity has changed for the better"
         ]
     },
-    // Function 30: Punishment
     30: {
         name: "Punishment",
         shortName: "Punishment",
@@ -1166,7 +1134,6 @@ const PROPP_KNOWLEDGE_DATABASE = {
             "Use this moment to celebrate your hero's triumph over deceit"
         ]
     },
-    // Function 31: Reward
     31: {
         name: "Reward",
         shortName: "Reward",
@@ -1207,12 +1174,8 @@ const PROPP_KNOWLEDGE_DATABASE = {
     }
 };
 
-// Add all remaining functions with similar detailed structure...
-// (I'll continue with more functions to make the database comprehensive)
-
 // Helper functions for the knowledge database
 const PROPP_HELPER_FUNCTIONS = {
-    // Find responses based on user question
     findRelevantResponse: function (userQuestion, currentSceneId, storyTheme) {
         const lowerQuestion = userQuestion.toLowerCase();
         const sceneData = PROPP_KNOWLEDGE_DATABASE[currentSceneId];
@@ -1221,11 +1184,9 @@ const PROPP_HELPER_FUNCTIONS = {
             return this.getGenericResponse(lowerQuestion, storyTheme);
         }
 
-        // Check if question matches common questions for this scene
         for (let i = 0; i < sceneData.commonQuestions.length; i++) {
             const commonQ = sceneData.commonQuestions[i].toLowerCase();
             if (this.questionsMatch(lowerQuestion, commonQ)) {
-                // Return a random response from this scene's responses
                 const randomIndex = Math.floor(Math.random() * sceneData.responses.length);
                 return {
                     response: sceneData.responses[randomIndex],
@@ -1236,7 +1197,6 @@ const PROPP_HELPER_FUNCTIONS = {
             }
         }
 
-        // If no exact match, return a general response for this scene
         const randomIndex = Math.floor(Math.random() * sceneData.responses.length);
         return {
             response: sceneData.responses[randomIndex],
@@ -1246,7 +1206,6 @@ const PROPP_HELPER_FUNCTIONS = {
         };
     },
 
-    // Check if two questions are similar
     questionsMatch: function (userQ, commonQ) {
         const userWords = userQ.split(' ');
         const commonWords = commonQ.split(' ');

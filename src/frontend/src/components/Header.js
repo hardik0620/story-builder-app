@@ -1,4 +1,4 @@
-// src/components/Header.js - Fixed Version
+// src/components/Header.js 
 import React, { useState, useEffect, useRef } from 'react';
 
 const Header = ({
@@ -17,7 +17,6 @@ const Header = ({
     const helpRef = useRef(null);
     const userRef = useRef(null);
 
-    // Close dropdowns when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (helpRef.current && !helpRef.current.contains(event.target)) {
@@ -34,7 +33,6 @@ const Header = ({
         };
     }, []);
 
-    // Load saved theme on mount
     useEffect(() => {
         const savedTheme = localStorage.getItem('selectedTheme') || 'default';
         setTheme(savedTheme);
@@ -64,10 +62,8 @@ const Header = ({
     };
 
     const changeTheme = (newTheme) => {
-        // Remove existing theme classes
         document.body.className = document.body.className.replace(/\b\w+-theme\b/g, '');
 
-        // Add new theme class if not default
         if (newTheme !== 'default') {
             document.body.classList.add(newTheme + '-theme');
         }
@@ -89,7 +85,6 @@ const Header = ({
 
     const switchUser = () => {
         if (window.confirm('Switch to a different user account?')) {
-            // This would typically involve more complex user switching logic
             alert('User switching functionality would be implemented here');
         }
         closeMenus();
@@ -102,31 +97,25 @@ const Header = ({
         closeMenus();
     };
 
-    // FIXED: Better user name display logic
     const getUserDisplayName = () => {
         if (!currentUser) return 'Guest';
 
-        // If user has a name, use it
         if (currentUser.name && currentUser.name !== 'Guest') {
             return currentUser.name;
         }
 
-        // If user has firstName and lastName, combine them
         if (currentUser.firstName && currentUser.lastName) {
             return `${currentUser.firstName} ${currentUser.lastName}`;
         }
 
-        // If user has firstName only
         if (currentUser.firstName) {
             return currentUser.firstName;
         }
 
-        // If user has email, use part before @
         if (currentUser.email) {
             return currentUser.email.split('@')[0];
         }
 
-        // Fallback based on user type
         switch (currentUser.type) {
             case 'google':
                 return 'Google User';
@@ -251,7 +240,7 @@ const Header = ({
                             left: 'auto',
                             minWidth: '250px'
                         }}>
-                            {/* FIXED: User Info Section */}
+                            {/* User Info Section */}
                             <div className="dropdown-item user-info" style={{
                                 fontWeight: 'bold',
                                 color: '#6c5ce7',

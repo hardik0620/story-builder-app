@@ -18,7 +18,6 @@ console.log('🔧 Environment check:', {
     FRONTEND_URL: process.env.FRONTEND_URL
 });
 
-// Create Express app
 console.log('🏗️  Creating Express app...');
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -239,7 +238,6 @@ const startServer = async () => {
             }
         });
 
-        // Graceful shutdown
         process.on('SIGTERM', () => {
             console.log('🛑 SIGTERM received, shutting down gracefully...');
             server.close(() => {
@@ -265,7 +263,6 @@ const startServer = async () => {
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
     console.error('Unhandled Promise Rejection:', err.message);
-    // Close server & exit process
     process.exit(1);
 });
 

@@ -1,8 +1,8 @@
-// src/components/LoginPage.js - Fixed Version
+// src/components/LoginPage.js 
 import React, { useState, useEffect } from 'react';
 
 const LoginPage = ({ onLogin }) => {
-    const [currentView, setCurrentView] = useState('login'); // 'login', 'signup', 'forgot'
+    const [currentView, setCurrentView] = useState('login'); 
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -15,7 +15,7 @@ const LoginPage = ({ onLogin }) => {
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const [signupStep, setSignupStep] = useState(1); // Multi-step signup
+    const [signupStep, setSignupStep] = useState(1); 
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -24,7 +24,6 @@ const LoginPage = ({ onLogin }) => {
             [name]: type === 'checkbox' ? checked : value
         }));
 
-        // Clear error when user starts typing
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
@@ -37,7 +36,6 @@ const LoginPage = ({ onLogin }) => {
         const newErrors = {};
 
         if (currentView === 'signup') {
-            // Signup validation
             if (!formData.firstName.trim()) {
                 newErrors.firstName = 'First name is required';
             }
@@ -55,7 +53,6 @@ const LoginPage = ({ onLogin }) => {
             }
         }
 
-        // Common validation
         if (!formData.email.trim()) {
             newErrors.email = 'Email is required';
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -72,7 +69,6 @@ const LoginPage = ({ onLogin }) => {
         return Object.keys(newErrors).length === 0;
     };
 
-    // FIXED: Validate step 2 specifically for password confirmation
     const validateStep2 = () => {
         const newErrors = {};
 
@@ -106,7 +102,6 @@ const LoginPage = ({ onLogin }) => {
         setIsLoading(true);
 
         try {
-            // Simulate API call delay
             await new Promise(resolve => setTimeout(resolve, 1500));
 
             let userData = {};
@@ -154,7 +149,6 @@ const LoginPage = ({ onLogin }) => {
                     break;
             }
 
-            // Show success message for new signups
             if (currentView === 'signup' && type === 'email') {
                 alert(`🎉 Welcome to Story Weaver, ${userData.name}! Your account has been created successfully.`);
             }
@@ -172,14 +166,12 @@ const LoginPage = ({ onLogin }) => {
         }
     };
 
-    // FIXED: Improved Google Sign-In with better error handling
+    // Google Sign-In with better error handling
     const handleGoogleLogin = () => {
         console.log('🔵 Google login initiated');
 
-        // Check if running on localhost (development)
         if (window.location.hostname === 'localhost') {
             console.log('🔧 Development mode - Using demo Google login');
-            // Show info to user about demo mode
             const userConfirm = window.confirm(
                 '🔧 Development Mode\n\n' +
                 'This is a demo of Google Sign-In. In production, this would:\n' +
@@ -208,7 +200,6 @@ const LoginPage = ({ onLogin }) => {
             return;
         }
 
-        // Production mode - Real Google Sign-In
         if (window.google && window.google.accounts) {
             try {
                 window.google.accounts.id.prompt((notification) => {
@@ -228,7 +219,6 @@ const LoginPage = ({ onLogin }) => {
     };
 
     const handleManualGoogleLogin = () => {
-        // Check if we have a valid Google Client ID
         const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
         if (!clientId || clientId === 'your-google-client-id') {
@@ -241,7 +231,6 @@ const LoginPage = ({ onLogin }) => {
                 'For now, using demo mode...'
             );
 
-            // Demo mode fallback
             setIsLoading(true);
             setTimeout(() => {
                 const demoUser = {
@@ -257,7 +246,6 @@ const LoginPage = ({ onLogin }) => {
             return;
         }
 
-        // Real Google OAuth flow
         const googleAuthUrl = `https://accounts.google.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(window.location.origin)}&scope=email profile&response_type=code&prompt=select_account`;
 
         const popup = window.open(
@@ -266,11 +254,9 @@ const LoginPage = ({ onLogin }) => {
             'width=500,height=600,scrollbars=yes,resizable=yes'
         );
 
-        // Monitor popup for completion
         const checkClosed = setInterval(() => {
             if (popup.closed) {
                 clearInterval(checkClosed);
-                // In a real app, you'd handle the OAuth response here
                 console.log('Google OAuth popup closed');
             }
         }, 1000);
@@ -279,7 +265,6 @@ const LoginPage = ({ onLogin }) => {
     const handleAppleLogin = () => {
         console.log('🍎 Apple login initiated');
 
-        // Show demo info for Apple Sign-In
         const userConfirm = window.confirm(
             '🍎 Apple Sign-In Demo\n\n' +
             'This is a demo of Apple Sign-In. In production, this would:\n' +
@@ -307,7 +292,6 @@ const LoginPage = ({ onLogin }) => {
 
     const handleGoogleResponse = (response) => {
         try {
-            // Decode JWT token to get user info
             const userInfo = JSON.parse(atob(response.credential.split('.')[1]));
 
             const userData = {
@@ -324,7 +308,6 @@ const LoginPage = ({ onLogin }) => {
             handleLogin('google', userData);
         } catch (error) {
             console.error('Google sign-in error:', error);
-            // Fallback to demo user
             const demoUser = {
                 type: 'google',
                 name: 'Google User',
@@ -345,7 +328,6 @@ const LoginPage = ({ onLogin }) => {
 
         setIsLoading(true);
 
-        // Simulate sending reset email
         setTimeout(() => {
             setIsLoading(false);
             alert(`Password reset link sent to ${formData.email}! Check your inbox.`);
@@ -403,7 +385,6 @@ const LoginPage = ({ onLogin }) => {
                             type="button"
                             className="login-btn primary"
                             onClick={() => {
-                                // Validate step 1 before proceeding
                                 const step1Errors = {};
                                 if (!formData.firstName.trim()) step1Errors.firstName = 'First name is required';
                                 if (!formData.lastName.trim()) step1Errors.lastName = 'Last name is required';
@@ -482,7 +463,6 @@ const LoginPage = ({ onLogin }) => {
                                 type="button"
                                 className="login-btn primary"
                                 onClick={() => {
-                                    // FIXED: Use the step 2 validation
                                     if (validateStep2()) {
                                         setSignupStep(3);
                                     }

@@ -34,7 +34,7 @@ const Step5Review = ({ nextStep, previousStep, storyData, setStoryData }) => {
             const timeSpent = Math.max(1, Math.round((new Date() - new Date(storyData.startTime || Date.now())) / 60000));
 
             // Analyze English quality (now async)
-            let englishQuality = 50; // Default fallback score
+            let englishQuality = 50; 
             try {
                 const englishAnalysis = await analyzeEnglishQuality(completeStory);
                 englishQuality = englishAnalysis.score || 50;
@@ -55,7 +55,6 @@ const Step5Review = ({ nextStep, previousStep, storyData, setStoryData }) => {
 
             console.log('Calculated stats:', stats);
 
-            // Calculate earned badges
             const newEarnedBadges = calculateEarnedBadges(stats);
             console.log('Earned badges:', newEarnedBadges);
 
@@ -75,7 +74,6 @@ const Step5Review = ({ nextStep, previousStep, storyData, setStoryData }) => {
             return "Your amazing story will appear here once you've written it!";
         }
 
-        // Join all story parts with a single space for continuous text
         return storyData.storyParts.map(part => part.text).join(' ');
     };
 
@@ -97,15 +95,12 @@ const Step5Review = ({ nextStep, previousStep, storyData, setStoryData }) => {
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-            // Add title
             const title = finalTitle || storyData.title || 'My Amazing Story';
             pdf.setFontSize(24);
             pdf.text(title, pdfWidth / 2, 20, { align: 'center' });
 
-            // Add story content
             pdf.addImage(imgData, 'PNG', 0, 30, pdfWidth, pdfHeight);
 
-            // Add statistics page
             pdf.addPage();
             pdf.setFontSize(18);
             pdf.text('Story Statistics', pdfWidth / 2, 20, { align: 'center' });
@@ -126,7 +121,6 @@ const Step5Review = ({ nextStep, previousStep, storyData, setStoryData }) => {
                 yPos += 10;
             });
 
-            // Save the PDF
             pdf.save(`${title.replace(/[^a-z0-9]/gi, '_')}.pdf`);
         } catch (error) {
             console.error('PDF export error:', error);
@@ -212,7 +206,6 @@ const Step5Review = ({ nextStep, previousStep, storyData, setStoryData }) => {
 
             setTimeout(() => {
                 if (window.confirm("Would you like to visit your story gallery and see all your creations? You can also continue writing this story later!")) {
-                    // Trigger gallery view in parent component
                     window.dispatchEvent(new CustomEvent('showGallery'));
                 }
             }, 1500);
@@ -333,7 +326,7 @@ const Step5Review = ({ nextStep, previousStep, storyData, setStoryData }) => {
                         lineHeight: '1.8',
                         color: storyData.color || '#010e11ff',
                         textAlign: 'justify',
-                        textIndent: '20px' // Indent first line like a book
+                        textIndent: '20px' 
                     }}
                 >
                     {generateCompleteStory()}
@@ -385,7 +378,6 @@ const Step5Review = ({ nextStep, previousStep, storyData, setStoryData }) => {
                 </div>
             </div>
 
-            {/* Badges Section */}
             {/* Badges Section */}
             <div style={{
                 margin: '20px 0',

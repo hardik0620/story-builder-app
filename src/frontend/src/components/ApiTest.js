@@ -16,15 +16,12 @@ const ApiTest = () => {
             setConnectionStatus('checking');
             setError(null);
 
-            // Test health endpoint
             const healthResponse = await apiService.checkHealth();
             console.log('Health check:', healthResponse);
 
-            // Test Propp functions
             const proppResponse = await apiService.getProppFunctions();
             console.log('Propp functions:', proppResponse);
 
-            // Test themes
             const themesResponse = await apiService.getStoryThemes();
             console.log('Themes:', themesResponse);
 

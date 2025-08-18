@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 
-// Import controller - make sure this exists
+// Import controller 
 let aiController;
 try {
     aiController = require('../controllers/aiController');
@@ -97,7 +97,7 @@ router.get('/test', (req, res) => {
     });
 });
 
-// AI Chat endpoint - Enhanced for Story Wizard
+// AI Chat endpoint
 router.post('/chat', validateChatRequest, handleValidationErrors, (req, res) => {
     try {
         console.log('🧙‍♂️ AI Chat request received:', req.body)
@@ -117,7 +117,7 @@ router.post('/chat', validateChatRequest, handleValidationErrors, (req, res) => 
     }
 });
 
-// IMPROVED: Story suggestions endpoint - Enhanced for writing assistance
+// Story suggestions endpoint
 router.post('/suggestions', validateSuggestionRequest, handleValidationErrors, (req, res) => {
     try {
         console.log('💡 Story suggestions request:', {
@@ -155,7 +155,7 @@ router.post('/generate-title', validateTitleRequest, handleValidationErrors, (re
     }
 });
 
-// Story completion endpoint - Enhanced for finishing partial stories
+// Story completion endpoint
 router.post('/complete-story', [
     body('storyParts')
         .isArray()
@@ -181,7 +181,7 @@ router.post('/complete-story', [
     }
 });
 
-// Story evaluation endpoint - Enhanced for feedback and improvements
+// Story evaluation endpoint
 router.post('/evaluate-story', [
     body('storyText')
         .isString()

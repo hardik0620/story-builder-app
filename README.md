@@ -580,8 +580,8 @@ If you intend to use, modify, or distribute this code, please contact the reposi
 
 ### 🏛️ **Academic Foundation**
 - **[Vladimir Propp](https://en.wikipedia.org/wiki/Vladimir_Propp)** - For his groundbreaking work "Morphology of the Folktale" (1928) which established the systematic analysis of narrative structure through 31 distinct functions
-- **[Joseph Campbell](https://en.wikipedia.org/wiki/Joseph_Campbell)** - For "The Hero with a Thousand Faces" and the monomyth concept that influences our narrative understanding
-- **Folklore Studies Community** - For preserving and analyzing traditional storytelling patterns
+- **[Aurora Constantin](https://sites.google.com/site/auroraconstantin/)** - For invaluable guidance and mentorship throughout the development process
+- **[Sean Hammond](https://github.com/seanhammond)** - For inspiring this project through his innovative storytelling tool built without AI, demonstrating the power of pure narrative structure and user-centered design
 
 ### 🤖 **Technology Partners**
 - **[Google AI Team](https://ai.google/)** - For providing the powerful Gemini API that enables intelligent writing assistance
